@@ -3,16 +3,13 @@
     "version": "0.0.1",
     "description": "基于mpvue小程序的通用能力封装",
     "main": "index.js",
+    "types": "types/index.d.ts",
     "repository": "ssh://git@git.dianpingoa.com/~wuxueqian/wxapp-common.git",
     "author": "wuxueqian <wuxueqian@meituan.com>",
     "license": "MIT",
-    "keywords": [
-        "wechat",
-        "wechat-miniprogram",
-        "mpvue"
-    ],
+    "keywords": ["wechat", "wechat-miniprogram", "mpvue"],
     "scripts": {
-        "build": "rimraf lib && mkdirp lib && cp src/**.d.ts lib/",
+        "build": "rimraf lib && mkdirp lib && tsc",
         "prepublishOnly": "npm run build",
         "lint": "npm run lint:ts",
         "lint:ts": "tslint -e node_modules -c .tslintrc.json src/**/*.ts",
@@ -21,11 +18,7 @@
         "lint-staged:format": "prettier --write"
     },
     "lint-staged": {
-        "src/**/*.{ts,tsx}": [
-            "lint-staged:format",
-            "lint-staged:ts",
-            "git add"
-        ]
+        "src/**/*.{ts,tsx}": ["lint-staged:format", "lint-staged:ts", "git add"]
     },
     "pre-commit": "lint-staged",
     "devDependencies": {
