@@ -7,7 +7,11 @@
     "repository": "ssh://git@git.dianpingoa.com/~wuxueqian/wxapp-common.git",
     "author": "wuxueqian <wuxueqian@meituan.com>",
     "license": "MIT",
-    "keywords": ["wechat", "wechat-miniprogram", "mpvue"],
+    "keywords": [
+        "wechat",
+        "wechat-miniprogram",
+        "mpvue"
+    ],
     "scripts": {
         "build": "rimraf lib && mkdirp lib && tsc",
         "prepublishOnly": "npm run build",
@@ -18,15 +22,27 @@
         "lint-staged:format": "prettier --write"
     },
     "lint-staged": {
-        "src/**/*.{ts,tsx}": ["lint-staged:format", "lint-staged:ts", "git add"]
+        "src/**/*.{ts,tsx}": [
+            "lint-staged:format",
+            "lint-staged:ts",
+            "git add"
+        ]
     },
     "pre-commit": "lint-staged",
     "devDependencies": {
+        "@types/node": "^9.6.1",
         "lint-staged": "6",
+        "mkdirp": "^0.5.1",
         "pre-commit": "^1.2.2",
         "prettier": "^1.11.1",
+        "rimraf": "^2.6.2",
         "tslint": "^5.9.1",
         "tslint-eslint-rules": "^5.1.0",
         "typescript": "^2.8.1"
+    },
+    "dependencies": {
+        "mpvue": "^1.0.7",
+        "vue": "^2.5.16",
+        "vuex": "^3.0.1"
     }
 }
