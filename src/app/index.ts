@@ -9,7 +9,7 @@ import Emitter from '../emitter';
 import GeoManager from '../geo';
 import { httpRequest } from '../request';
 import { app, page, Owl } from '@hfe/mp-owl';
-import AppConfig from '../interface/appConfig';
+import { AppConfig } from '../interface/config';
 
 const singleton: any = {};
 
@@ -24,8 +24,8 @@ export default function wrap(_app, config: AppConfig) {
         throw new Error('小程序App尚未实例化');
     }
 
-    if (!config.name || !config.version) {
-        throw new Error('必须提供name和version配置项');
+    if (!config.name || !config.version || !config.pkgName) {
+        throw new Error('必须提供name,version,pkgName配置项');
     }
 
     if (!config.env) {
@@ -103,6 +103,14 @@ export default function wrap(_app, config: AppConfig) {
             enumerable: false,
             get: function() {
                 return this.__config.name;
+            }
+        },
+        dev: {
+            // TODO区分dev和debug
+            configurable: false,
+            enumerable: false,
+            get: function() {
+                return !isProduct;
             }
         },
         debug: {

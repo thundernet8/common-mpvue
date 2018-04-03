@@ -28,7 +28,7 @@ Promise.prototype.finally = function(finaliser) {
     );
 };
 
-const wxp = {};
+const wxp: any = {};
 
 for (const key in wx) {
     if (Object.prototype.hasOwnProperty.call(wx, key)) {
