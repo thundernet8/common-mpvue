@@ -1,10 +1,11 @@
 import Vuex from 'vuex';
+import { StoreOptions } from 'vuex/types/index';
 import { syncStateToStoragePlugin } from './plugin';
 
-export default class PersistStore extends Vuex.Store<any> {
+export default class PersistStore<S> extends Vuex.Store<S> {
     static names: string[] = [];
 
-    constructor(name, options) {
+    constructor(name, options: StoreOptions<S>) {
         if (PersistStore.names.includes(name)) {
             throw new Error(`请不要重复创建相同名称的store - [${name}]`);
         }
@@ -15,7 +16,7 @@ export default class PersistStore extends Vuex.Store<any> {
         const localState = JSON.parse(wx.getStorageSync(name) || '{}');
 
         const newState = Object.assign(Object.create(null), localState, state || {});
-        const newPlugins = [].concat(plugins || [], [syncStateToStoragePlugin(name)] as any);
+        const newPlugins = new Array(0).concat(plugins || [], [syncStateToStoragePlugin(name)]);
 
         const newOptions = Object.assign(
             {
@@ -29,3 +30,33 @@ export default class PersistStore extends Vuex.Store<any> {
         super(newOptions);
     }
 }
+
+// TODO https://vuex.vuejs.org/zh-cn/modules.html#%E6%A8%A1%E5%9D%97%E5%8A%A8%E6%80%81%E6%B3%A8%E5%86%8C
+export const globalStoreOptions = {
+    state() {
+        return {
+            token: '',
+            openId: '',
+            unionId: '',
+            wxUserInfo: null
+        };
+    },
+    mutations: {
+        // Token
+        updateToken(state, token) {
+            state.token = token;
+        },
+        // openid
+        updateOpenId(state, openId) {
+            state.openId = openId;
+        },
+        // unionId
+        updateUnionId(state, unionId) {
+            state.unionId = unionId;
+        },
+        // 保存微信用户信息 头像 昵称等
+        updateWxUserInfo(state, wxUserInfo) {
+            state.wxUserInfo = wxUserInfo;
+        }
+    }
+};
