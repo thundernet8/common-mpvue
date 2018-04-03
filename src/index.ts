@@ -23,7 +23,7 @@ export { default as PersistStore } from './store';
 /**
  * 实用工具函数
  */
-export const utils = _utils;
+export const Utils = _utils;
 
 /**
  * EventEmitter
