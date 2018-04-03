@@ -38,7 +38,10 @@ export const globalStoreOptions = {
             token: '',
             openId: '',
             unionId: '',
-            wxUserInfo: null
+            wxUserInfo: null,
+            locationInfo: null,
+            cityInfo: null,
+            locCityInfo: null
         };
     },
     mutations: {
@@ -57,6 +60,18 @@ export const globalStoreOptions = {
         // 保存微信用户信息 头像 昵称等
         updateWxUserInfo(state, wxUserInfo) {
             state.wxUserInfo = wxUserInfo;
+        },
+        // 保存定位信息
+        updateLocationInfo(state, locationInfo) {
+            state.locationInfo = locationInfo;
+        },
+        // 保存城市信息
+        updateCityInfo(state, cityInfo) {
+            state.cityInfo = cityInfo;
+        },
+        // 保存定位城市信息
+        updateLocCityInfo(state, locCityInfo) {
+            state.locCityInfo = locCityInfo;
         }
     }
 };

@@ -17,8 +17,9 @@ const singleton: any = {};
  * 封装和扩展小程序app实例以及wx
  * @param _app 入口的Vue实例
  * @param config app配置
+ * @param props 给app实例扩展更多的方法或属性
  */
-export default function wrap(_app, config: AppConfig) {
+export default function wrap(_app, config: AppConfig, props?: { [key: string]: any }) {
     const wxapp = getApp();
     if (!wxapp) {
         throw new Error('小程序App尚未实例化');
@@ -171,7 +172,9 @@ export default function wrap(_app, config: AppConfig) {
         }
     });
 
-    Object.keys(methods).forEach(key => {
+    const allProps = Object.assign({}, methods, props || {});
+
+    Object.keys(allProps).forEach(key => {
         Object.defineProperty(wxapp, key, {
             configurable: false,
             enumerable: false,

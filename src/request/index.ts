@@ -200,6 +200,7 @@ export default class Request extends Configurable {
 
     request(obj, opts: RequestOptions) {
         const app = getApp();
+        obj.url = this.getFullUrl(obj.url);
         if (!/https?:\/\//i.test(obj.url)) {
             return Promise.reject(
                 new Error('请添加request实例的domain配置或者使用绝对http地址请求')

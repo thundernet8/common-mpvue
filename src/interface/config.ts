@@ -16,3 +16,8 @@ export interface AppConfig extends BaseConfig {
 export interface RequestConfig extends BaseConfig {
     domain: string;
 }
+
+export interface GeoConfig extends BaseConfig {
+    domain?: string;
+    locateCityApi?: string;
+}
