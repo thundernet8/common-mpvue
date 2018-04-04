@@ -1,25 +1,32 @@
+import Vue from 'mpvue';
 import PersistStore from '../store';
 import vendor from '../vendor';
 import md5 from 'md5';
-import { globalStoreOptions } from '../store';
+import { globalStoreOptions, VuexStore } from '../store';
 import methods from './methods';
 import Logger from '../logger';
 import * as utils from '../utils';
 import Emitter from '../emitter';
 import GeoManager from '../geo';
 import { httpRequest } from '../request';
-import { app, page, Owl } from '@hfe/mp-owl';
+import { app as owlapp, page, Owl } from '@hfe/mp-owl';
 import { AppConfig } from '../interface/config';
+import { StoreOptions } from 'vuex/types/index';
+import Navigator from '../nav';
 
 const singleton: any = {};
 
 /**
  * 封装和扩展小程序app实例以及wx
- * @param _app 入口的Vue实例
+ * @param App 入口的Vue组件
  * @param config app配置
  * @param props 给app实例扩展更多的方法或属性
  */
-export default function wrap(_app, config: AppConfig, props?: { [key: string]: any }) {
+export default function wrap(App, config: AppConfig, props?: { [key: string]: any }) {
+    App.mpType = 'app';
+    const app = new Vue(App);
+    app.$mount();
+
     const wxapp = getApp();
     if (!wxapp) {
         throw new Error('小程序App尚未实例化');
@@ -49,6 +56,7 @@ export default function wrap(_app, config: AppConfig, props?: { [key: string]: a
     singleton.geo = new GeoManager().configAll(config);
     const storeKey = md5(`${config.pkgName || config.name}_global_state`);
     singleton.store = new PersistStore(storeKey, globalStoreOptions);
+    singleton.nav = new Navigator();
 
     // vendor补充
     if (config.owl) {
@@ -59,7 +67,7 @@ export default function wrap(_app, config: AppConfig, props?: { [key: string]: a
             wxAppVersion: config.version // 小程序发布版本
         };
         vendor.owl = new Owl(owlConfig);
-        global.App = app;
+        global.App = owlapp;
         global.Page = page;
         singleton.store.subscribe((mutation, state) => {
             if (mutation.type === 'updateOpenId' || mutation.type === 'updateUnionId') {
@@ -163,6 +171,13 @@ export default function wrap(_app, config: AppConfig, props?: { [key: string]: a
                 return singleton.geo;
             }
         },
+        nav: {
+            configurable: false,
+            enumerable: false,
+            get: function() {
+                return singleton.nav;
+            }
+        },
         store: {
             configurable: false,
             enumerable: false,
@@ -192,8 +207,33 @@ export default function wrap(_app, config: AppConfig, props?: { [key: string]: a
 
 /**
  * 扩展页面实例的属性和方法
- * @param _page page的Vue实例
+ * @param Page page的Vue组件
+ * @param storeOptions Vue Store选项
  */
-export function wrapPage(_page) {
-    // TODO
+export function wrapPage<S>(Page, storeOptions?: StoreOptions<S>) {
+    return (function() {
+        let store: VuexStore<S>;
+        return function() {
+            Page.mpType = 'app';
+            const app = new Vue(Page);
+            app.$mount();
+
+            const name = app.$options.name;
+            if (!name) {
+                throw new Error('请为页面Vue组件配置独一无二的name');
+            }
+            if (!store) {
+                store = new VuexStore<any>({
+                    state() {
+                        return {};
+                    }
+                });
+            }
+
+            if (storeOptions) {
+                store.registerModule(name, storeOptions);
+                app.$store = store;
+            }
+        };
+    })();
 }

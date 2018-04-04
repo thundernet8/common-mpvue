@@ -129,7 +129,7 @@ class RequestManager {
                         if (opts.checkToken) {
                             // 登录失效
                             if (app.debug) {
-                                console.log('Warn: 登陆态失效，正在进行登出');
+                                console.warn('Warn: 登陆态失效，正在进行登出');
                             }
 
                             app.setToken('');

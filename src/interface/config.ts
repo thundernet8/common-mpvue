@@ -21,3 +21,9 @@ export interface GeoConfig extends BaseConfig {
     domain?: string;
     locateCityApi?: string;
 }
+
+export interface NavConfig extends BaseConfig {
+    pageLimit?: number;
+    webviewSchema?: string;
+    appId: string;
+}
