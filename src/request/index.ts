@@ -143,20 +143,20 @@ class RequestManager {
     }
 }
 
-export default class Request extends Configurable {
-    _config: RequestConfig;
+class ChainableRequest extends Configurable {
+    protected _requestManagerInstance: RequestManager;
 
-    _requestManagerInstance: RequestManager;
+    protected _config: RequestConfig;
 
-    constructor(config?: RequestConfig) {
-        super();
-        if (config) {
-            this.configAll(config);
-            this._requestManagerInstance = new RequestManager(config);
-        }
+    protected _reqOpts: RequestOptions = {};
+
+    private _setReqOptions(key, value) {
+        const opts = this._reqOpts;
+        opts[key] = value;
+        this._reqOpts = opts;
     }
 
-    get _requestManager() {
+    protected get _requestManager() {
         if (!this._requestManagerInstance) {
             this._requestManagerInstance = new RequestManager(this._config);
         }
@@ -164,7 +164,7 @@ export default class Request extends Configurable {
         return this._requestManagerInstance;
     }
 
-    getFullUrl(url) {
+    protected _getFullUrl(url) {
         return /https?:\/\//i.test(url)
             ? url
             : `${this.config('domain')}${url.startsWith('/') ? '' : '/'}${url}`;
@@ -200,7 +200,7 @@ export default class Request extends Configurable {
 
     request(obj, opts: RequestOptions) {
         const app = getApp();
-        obj.url = this.getFullUrl(obj.url);
+        obj.url = this._getFullUrl(obj.url);
         if (!/https?:\/\//i.test(obj.url)) {
             return Promise.reject(
                 new Error('请添加request实例的domain配置或者使用绝对http地址请求')
@@ -256,10 +256,87 @@ export default class Request extends Configurable {
         });
     }
 
+    // 链式配置
+    mapi(): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, this._config);
+            return shadow.mapi();
+        }
+        this._setReqOptions('isMapiRequest', true);
+        return this as any;
+    }
+
+    cookieToken(): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, this._config);
+            return shadow.cookieToken();
+        }
+        this._setReqOptions('cookieToken', true);
+        return this as any;
+    }
+
+    qsToken(): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, this._config);
+            return shadow.qsToken();
+        }
+        this._setReqOptions('qsToken', true);
+        return this as any;
+    }
+
+    form(): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, this._config);
+            return shadow.form();
+        }
+        this._setReqOptions('formPost', true);
+        return this as any;
+    }
+}
+
+class ShadowRequest extends ChainableRequest {
+    constructor(reqManager: RequestManager, config?: RequestConfig) {
+        super();
+        if (config) {
+            this.configAll(config);
+            this._requestManagerInstance = reqManager;
+        }
+    }
+
+    GET(url: string, params?: { [key: string]: any }) {
+        return this.request(
+            {
+                url: addUrlQuery(this._getFullUrl(url), pureAssign({}, params))
+            },
+            this._reqOpts
+        );
+    }
+
+    POST(url: string, data?: { [key: string]: any }) {
+        return this.request(
+            {
+                url: this._getFullUrl(url),
+                data,
+                method: 'POST'
+            },
+            this._reqOpts
+        );
+    }
+}
+
+export default class Request extends ChainableRequest {
+    constructor(config?: RequestConfig) {
+        super();
+        if (config) {
+            this.configAll(config);
+            this._requestManagerInstance = new RequestManager(config);
+        }
+    }
+
     httpGet(url, params = {}, opts: RequestOptions = {}) {
         return this.request(
             {
-                url: addUrlQuery(this.getFullUrl(url), pureAssign({}, params))
+                url: addUrlQuery(this._getFullUrl(url), pureAssign({}, params))
             },
             opts
         );
@@ -268,7 +345,7 @@ export default class Request extends Configurable {
     httpJsonPost(url, data = {}, opts: RequestOptions = {}) {
         return this.request(
             {
-                url: this.getFullUrl(url),
+                url: this._getFullUrl(url),
                 data,
                 method: 'POST'
             },
@@ -281,7 +358,7 @@ export default class Request extends Configurable {
     httpFormPost(url, data = {}, opts: RequestOptions = {}) {
         return this.request(
             {
-                url: addUrlQuery(this.getFullUrl(url), {}),
+                url: addUrlQuery(this._getFullUrl(url), {}),
                 data,
                 method: 'POST'
             },

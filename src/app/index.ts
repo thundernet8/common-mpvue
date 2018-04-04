@@ -189,3 +189,11 @@ export default function wrap(_app, config: AppConfig, props?: { [key: string]: a
 
     httpRequest.configAll(config);
 }
+
+/**
+ * 扩展页面实例的属性和方法
+ * @param _page page的Vue实例
+ */
+export function wrapPage(_page) {
+    // TODO
+}

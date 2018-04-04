@@ -1,7 +1,7 @@
 import { AppConfig } from '../interface/config';
 
 export default class Configurable {
-    _config = {};
+    protected _config = {};
 
     config(key, value?) {
         if (value === undefined) {

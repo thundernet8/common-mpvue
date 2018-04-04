@@ -2,7 +2,21 @@ import Vuex from 'vuex';
 import { StoreOptions } from 'vuex/types/index';
 import { syncStateToStoragePlugin } from './plugin';
 
-export default class PersistStore<S> extends Vuex.Store<S> {
+export class VuexStore<S> extends Vuex.Store<S> {
+    _options: any = {};
+
+    constructor(options: StoreOptions<S>) {
+        super(options);
+        this._options = options;
+    }
+
+    reset() {
+        const { state } = this._options;
+        this.replaceState({ ...(state || {}) });
+    }
+}
+
+export default class PersistStore<S> extends VuexStore<S> {
     static names: string[] = [];
 
     constructor(name, options: StoreOptions<S>) {
