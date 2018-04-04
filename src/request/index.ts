@@ -2,6 +2,7 @@ import qs from 'querystring';
 import Configurable from '../base/configurable';
 import { RequestConfig } from '../interface/config';
 import { RequestOptions } from '../interface/option';
+import { BaseKV } from '../interface';
 import { pureAssign, addUrlQuery } from '../utils';
 import wxp from '../wxp';
 
@@ -303,7 +304,7 @@ class ShadowRequest extends ChainableRequest {
         }
     }
 
-    GET(url: string, params?: { [key: string]: any }) {
+    GET(url: string, params?: BaseKV) {
         return this.request(
             {
                 url: addUrlQuery(this._getFullUrl(url), pureAssign({}, params))
@@ -312,7 +313,7 @@ class ShadowRequest extends ChainableRequest {
         );
     }
 
-    POST(url: string, data?: { [key: string]: any }) {
+    POST(url: string, data?: BaseKV) {
         return this.request(
             {
                 url: this._getFullUrl(url),
@@ -342,7 +343,7 @@ export default class Request extends ChainableRequest {
         );
     }
 
-    httpJsonPost(url, data = {}, opts: RequestOptions = {}) {
+    httpJsonPost(url: string, data: BaseKV = {}, opts: RequestOptions = {}) {
         return this.request(
             {
                 url: this._getFullUrl(url),
@@ -355,7 +356,7 @@ export default class Request extends ChainableRequest {
         );
     }
 
-    httpFormPost(url, data = {}, opts: RequestOptions = {}) {
+    httpFormPost(url: string, data: BaseKV = {}, opts: RequestOptions = {}) {
         return this.request(
             {
                 url: addUrlQuery(this._getFullUrl(url), {}),
@@ -374,7 +375,7 @@ export default class Request extends ChainableRequest {
      * @param data
      * @param opts
      */
-    httpPost(url, data = {}, opts: RequestOptions = {}) {
+    httpPost(url: string, data: BaseKV = {}, opts: RequestOptions = {}) {
         return this.httpFormPost(url, data, opts);
     }
 }
