@@ -2,8 +2,8 @@ import padL from 'left-pad';
 import URL from 'url-parse';
 import qs from 'querystring';
 
-export function getFormatTime(format = 'yyyy/MM/dd HH:ii:ss') {
-    const date = new Date();
+export function getFormatTime(format = 'yyyy/MM/dd HH:ii:ss', d?: Date) {
+    const date = d || new Date();
 
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
@@ -86,5 +86,7 @@ export function pureAssign(...args) {
 
 export default {
     getFormatTime,
-    addUrlQuery
+    addUrlQuery,
+    parseUrlQuery,
+    pureAssign
 };

@@ -1,4 +1,11 @@
 import * as _utils from './utils';
+import mp from './base/mp';
+
+export const wx = mp.wx;
+
+export const getApp = mp.getApp;
+
+export const getCurrentPages = mp.getCurrentPages;
 
 /**
  * 封装和扩展小程序app实例以及wx

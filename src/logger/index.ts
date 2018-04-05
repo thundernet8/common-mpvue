@@ -56,4 +56,20 @@ export default class Logger extends Configurable {
             });
         }
     }
+
+    log(...args) {
+        return this._log('log', ...args);
+    }
+
+    error(...args) {
+        return this._log('error', ...args);
+    }
+
+    warn(...args) {
+        return this._log('warn', ...args);
+    }
+
+    info(...args) {
+        return this._log('info', ...args);
+    }
 }

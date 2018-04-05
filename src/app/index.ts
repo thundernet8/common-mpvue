@@ -13,6 +13,7 @@ import { app as owlapp, page, Owl } from '@hfe/mp-owl';
 import { AppConfig } from '../../types/config';
 import { StoreOptions } from 'vuex/types/index';
 import Navigator from '../nav';
+import { BaseKV } from '../../types/general';
 
 const singleton: any = {};
 
@@ -22,7 +23,7 @@ const singleton: any = {};
  * @param config app配置
  * @param props 给app实例扩展更多的方法或属性
  */
-export default function wrap(App, config: AppConfig, props?: { [key: string]: any }) {
+export default function wrap(App, config: AppConfig, props?: BaseKV) {
     if (!config.name || !config.version || !config.pkgName) {
         throw new Error('必须提供name,version,pkgName配置项');
     }
@@ -62,6 +63,12 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
     singleton.nav = new Navigator().configAll(config);
 
     // vendor补充
+    // 初始化lx
+    vendor.lx.init(config.lxDomain || 'https://report.meituan.com', {
+        appnm: config.name,
+        category: config.category
+    });
+
     if (config.owl) {
         const owlConfig = {
             project: config.pkgName, // 申请project http://cat.dp/cat/s/frontend?op=projectAdd
@@ -204,6 +211,12 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
             }
         });
     });
+
+    // 添加一个onLaunched生命周期调用，此时getApp已可以使用
+    const { onLaunched } = app.$options;
+    if (typeof onLaunched === 'function') {
+        onLaunched();
+    }
 }
 
 /**

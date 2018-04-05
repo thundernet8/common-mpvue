@@ -45,7 +45,7 @@ export default class Navigator extends Configurable {
         }
     }
 
-    navigateToH5(url, query: BaseKV = {}, navBarOptions: NavBarStyleOptions) {
+    navigateToH5(url, query: BaseKV = {}, navBarOptions: NavBarStyleOptions = {}) {
         if (!/^https?/i.test(url)) {
             throw new Error(`不合法的H5地址:${url}`);
         }
