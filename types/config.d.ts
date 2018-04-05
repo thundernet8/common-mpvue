@@ -12,6 +12,7 @@ export interface AppConfig extends BaseConfig {
     catDomain?: string;
     // 是否启用cat监控
     owl?: boolean;
+    webviewSchema?: string;
 }
 
 export interface RequestConfig extends BaseConfig {

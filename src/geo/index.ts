@@ -1,5 +1,5 @@
 import Configurable from '../base/configurable';
-import { GeoConfig } from '../interface/config';
+import { GeoConfig } from '../../types/config';
 import wxp from '../wxp';
 
 // 编辑自@dp/sparrow

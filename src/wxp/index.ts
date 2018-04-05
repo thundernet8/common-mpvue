@@ -60,14 +60,14 @@ for (const key in wx) {
 Object.defineProperties(wxp, {
     httpRequest: {
         configurable: false,
-        enumerable: false,
+        enumerable: true,
         get: function() {
             return httpRequest;
         }
     },
     nav: {
         configurable: false,
-        enumerable: false,
+        enumerable: true,
         get: function() {
             return nav;
         }
@@ -77,14 +77,14 @@ Object.defineProperties(wxp, {
 Object.defineProperties(wx, {
     httpRequest: {
         configurable: false,
-        enumerable: false,
+        enumerable: true,
         get: function() {
             return httpRequest;
         }
     },
     nav: {
         configurable: false,
-        enumerable: false,
+        enumerable: true,
         get: function() {
             return nav;
         }

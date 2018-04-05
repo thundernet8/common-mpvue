@@ -1,8 +1,8 @@
 import qs from 'querystring';
 import Configurable from '../base/configurable';
-import { RequestConfig } from '../interface/config';
-import { RequestOptions } from '../interface/option';
-import { BaseKV } from '../interface';
+import { RequestConfig } from '../../types/config';
+import { RequestOptions } from '../../types/option';
+import { BaseKV } from '../../types/general';
 import { pureAssign, addUrlQuery } from '../utils';
 import wxp from '../wxp';
 
@@ -308,12 +308,12 @@ class ChainableRequest extends Configurable {
         return this as any;
     }
 
-    auth(): ShadowRequest {
+    auth(auth: boolean = true): ShadowRequest {
         if (this instanceof Request) {
             const shadow = new ShadowRequest(this._requestManager, { ...this._config });
-            return shadow.auth();
+            return shadow.auth(auth);
         }
-        this._setReqOptions('auth', true);
+        this._setReqOptions('auth', auth);
         return this as any;
     }
 

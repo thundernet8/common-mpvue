@@ -46,3 +46,9 @@ export interface RequestOptions {
     //  */
     // respMime?: string;
 }
+
+export interface NavBarStyleOptions {
+    title?: string;
+    frontColor?: 'white' | 'black';
+    backgroundColor?: string;
+}

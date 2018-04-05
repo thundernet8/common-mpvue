@@ -53,7 +53,16 @@ export function addUrlQuery(url, query) {
     const existQuery = qs.parse(urlObj.query ? urlObj.query.slice(1) : '');
     const newQuery = Object.assign({}, existQuery, query);
     urlObj.set('query', newQuery);
-    return urlObj.href;
+    return /^https?:\/\//i.test(url) ? urlObj.href : urlObj.href.slice(urlObj.origin.length);
+}
+
+/**
+ * 解析url的query
+ * @param url
+ */
+export function parseUrlQuery(url) {
+    const urlObj = new URL(url);
+    return qs.parse(urlObj.query ? urlObj.query.slice(1) : '');
 }
 
 /**

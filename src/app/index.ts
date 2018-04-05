@@ -10,7 +10,7 @@ import Emitter from '../emitter';
 import GeoManager from '../geo';
 import { httpRequest } from '../request';
 import { app as owlapp, page, Owl } from '@hfe/mp-owl';
-import { AppConfig } from '../interface/config';
+import { AppConfig } from '../../types/config';
 import { StoreOptions } from 'vuex/types/index';
 import Navigator from '../nav';
 
@@ -59,7 +59,7 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
     singleton.geo = new GeoManager().configAll(config);
     const storeKey = `${md5(config.pkgName || config.name)}_global_state`;
     singleton.store = new PersistStore(storeKey, globalStoreOptions);
-    singleton.nav = new Navigator();
+    singleton.nav = new Navigator().configAll(config);
 
     // vendor补充
     if (config.owl) {
@@ -195,7 +195,7 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
     Object.keys(allProps).forEach(key => {
         Object.defineProperty(wxapp, key, {
             configurable: false,
-            enumerable: false,
+            enumerable: true,
             get: function() {
                 if (typeof allProps[key] === 'function') {
                     return allProps[key].bind(wxapp);

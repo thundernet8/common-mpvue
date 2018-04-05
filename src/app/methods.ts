@@ -28,6 +28,17 @@ export default {
         return pages[pages.length - 1];
     },
 
+    getPageRoute() {
+        return this.getPage().route;
+    },
+
+    getPageLink() {
+        const { options, route } = this.getPage();
+        return `${route}?${Object.keys(options).reduce((prev, curr) => {
+            return prev + curr + '=' + options[curr];
+        }, '')}`;
+    },
+
     getOpenId() {
         return this.store.state.openId || '';
     },

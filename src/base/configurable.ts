@@ -1,4 +1,4 @@
-import { AppConfig } from '../interface/config';
+import { AppConfig } from '../../types/config';
 
 export default class Configurable {
     protected _config = {};
