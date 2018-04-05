@@ -7,9 +7,17 @@ export default {
             }
         }
 
-        // TODO networkType
+        return wx
+            .getNetworkType()
+            .then(res => {
+                sysInfo.networkType = res.networkType;
+                return sysInfo;
+            })
+            .catch(() => {
+                return sysInfo;
+            });
+
         // TODO cache
-        return Promise.resolve(sysInfo);
     },
 
     getPage() {
@@ -77,7 +85,8 @@ export default {
     },
 
     logout() {
+        this.store.reset();
         this.setToken('');
-        // TODO clear storage and vuex store
+        return wx.clearStorage();
     }
 };

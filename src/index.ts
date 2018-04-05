@@ -3,7 +3,7 @@ import * as _utils from './utils';
 /**
  * 封装和扩展小程序app实例以及wx
  */
-export { default as wrap, wrapPage } from './app';
+export { default as wrap, WrapPage } from './app';
 
 /**
  * 请求类

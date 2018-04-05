@@ -197,10 +197,10 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
             configurable: false,
             enumerable: false,
             get: function() {
-                if (typeof methods[key] === 'function') {
-                    return methods[key].bind(wxapp);
+                if (typeof allProps[key] === 'function') {
+                    return allProps[key].bind(wxapp);
                 }
-                return methods[key];
+                return allProps[key];
             }
         });
     });
@@ -211,27 +211,32 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
  * @param Page page的Vue组件
  * @param storeOptions Vue Store选项
  */
-let store: VuexStore<any>;
 
-export function wrapPage<S>(Page, storeOptions?: StoreOptions<S>) {
-    Page.mpType = 'page';
-    const app = new Vue(Page);
-    app.$mount();
+export class WrapPage<S> {
+    static store: VuexStore<any>;
 
-    const name = app.$options.name;
-    if (!name) {
-        throw new Error('请为页面Vue组件配置独一无二的name');
-    }
-    if (!store) {
-        store = new VuexStore<any>({
-            state() {
-                return {};
-            }
-        });
-    }
+    page: Vue = null;
 
-    if (storeOptions) {
-        store.registerModule(name, storeOptions);
-        app.$store = store;
+    constructor(Page, storeOptions?: StoreOptions<S>) {
+        Page.mpType = 'page';
+        this.page = new Vue(Page);
+        this.page!.$mount();
+
+        const name = this.page!.$options.name;
+        if (!name) {
+            throw new Error('请为页面Vue组件配置独一无二的name');
+        }
+        if (!WrapPage.store) {
+            WrapPage.store = new VuexStore<any>({
+                state() {
+                    return {};
+                }
+            });
+        }
+
+        if (storeOptions) {
+            WrapPage.store.registerModule(name, storeOptions);
+            this.page!.$store = WrapPage.store;
+        }
     }
 }

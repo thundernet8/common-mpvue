@@ -193,7 +193,7 @@ class ChainableRequest extends Configurable {
                 dpid: app.getOpenId(),
                 token: app.getToken(),
                 appVersion: this.config('version'),
-                appName: this.config('name'),
+                appName: encodeURIComponent(this.config('name')),
                 isMicroMessenger: 'true',
                 microMsgVersion: systemInfo.version,
                 'network-type': systemInfo.networkType,
@@ -213,12 +213,15 @@ class ChainableRequest extends Configurable {
     protected _getBaseHeader() {
         return Promise.resolve({
             appVersion: this.config('version'),
-            appName: this.config('name'),
+            appName: encodeURIComponent(this.config('name')),
             isMicroMessenger: 'true'
         });
     }
 
     request(obj, opts: RequestOptions = {}) {
+        if (!this._config || Object.keys(this._config).length === 0) {
+            this.configAll({ ...wx.httpRequest._config });
+        }
         const newOptions: RequestOptions = pureAssign(this._reqOpts, opts || {});
         const app = getApp();
         obj.url = this._getFullUrl(obj.url);
@@ -289,7 +292,7 @@ class ChainableRequest extends Configurable {
     // 链式配置
     mapi(): ShadowRequest {
         if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, this._config);
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.mapi();
         }
         this._setReqOptions('isMapiRequest', true);
@@ -298,7 +301,7 @@ class ChainableRequest extends Configurable {
 
     custom(): ShadowRequest {
         if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, this._config);
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.custom();
         }
         this._setReqOptions('isCustomRequest', true);
@@ -307,7 +310,7 @@ class ChainableRequest extends Configurable {
 
     auth(): ShadowRequest {
         if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, this._config);
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.auth();
         }
         this._setReqOptions('auth', true);
@@ -316,7 +319,7 @@ class ChainableRequest extends Configurable {
 
     tokenKey(key: string): ShadowRequest {
         if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, this._config);
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.tokenKey(key);
         }
         this._setReqOptions('tokenKey', key);
@@ -325,7 +328,7 @@ class ChainableRequest extends Configurable {
 
     cookieToken(): ShadowRequest {
         if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, this._config);
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.cookieToken();
         }
         this._setReqOptions('cookieToken', true);
@@ -334,7 +337,7 @@ class ChainableRequest extends Configurable {
 
     qsToken(): ShadowRequest {
         if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, this._config);
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.qsToken();
         }
         this._setReqOptions('qsToken', true);
@@ -343,7 +346,7 @@ class ChainableRequest extends Configurable {
 
     form(): ShadowRequest {
         if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, this._config);
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.form();
         }
         this._setReqOptions('formPost', true);
@@ -363,7 +366,7 @@ class ShadowRequest extends ChainableRequest {
     GET(url: string, params?: BaseKV) {
         return this.request(
             {
-                url: addUrlQuery(this._getFullUrl(url), pureAssign({}, params))
+                url: addUrlQuery(url, pureAssign({}, params))
             },
             this._reqOpts
         );
@@ -372,7 +375,7 @@ class ShadowRequest extends ChainableRequest {
     POST(url: string, data?: BaseKV) {
         return this.request(
             {
-                url: this._getFullUrl(url),
+                url,
                 data,
                 method: 'POST'
             },
@@ -393,7 +396,7 @@ export default class Request extends ChainableRequest {
     httpGet(url, params = {}, opts: RequestOptions = {}) {
         return this.request(
             {
-                url: addUrlQuery(this._getFullUrl(url), pureAssign({}, params))
+                url: addUrlQuery(url, pureAssign({}, params))
             },
             opts
         );
@@ -402,7 +405,7 @@ export default class Request extends ChainableRequest {
     httpJsonPost(url: string, data: BaseKV = {}, opts: RequestOptions = {}) {
         return this.request(
             {
-                url: this._getFullUrl(url),
+                url,
                 data,
                 method: 'POST'
             },
@@ -415,7 +418,7 @@ export default class Request extends ChainableRequest {
     httpFormPost(url: string, data: BaseKV = {}, opts: RequestOptions = {}) {
         return this.request(
             {
-                url: addUrlQuery(this._getFullUrl(url), {}),
+                url,
                 data,
                 method: 'POST'
             },
