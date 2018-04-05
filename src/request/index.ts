@@ -23,11 +23,11 @@ class RequestManager {
     _queue: RequestQueueItem[] = [];
 
     // 默认配置
-    _config: RequestOptions = {
-        level: 1,
-        checkToken: true,
-        tokenKey: 'token'
-    };
+    // _config: RequestOptions = {
+    //     level: 1,
+    //     checkToken: true,
+    //     tokenKey: 'token'
+    // };
 
     // 请求配置
     _reqConfig: RequestConfig;
@@ -70,18 +70,21 @@ class RequestManager {
             const promise = anRequest.promise;
             const opts = anRequest.opts;
             const data = req.data || {};
-            const token = getApp().getToken();
+            // const token = getApp().getToken();
 
-            if (typeof data === 'object') {
-                data.appversion = this._reqConfig.version;
-                data.appname = this._reqConfig.name;
-            } else {
+            // if (typeof data === 'object') {
+            //     data.appversion = this._reqConfig.version;
+            //     data.appname = this._reqConfig.name;
+            // } else {
+            //     console.error('Request data must be object!');
+            // }
+            if (typeof data !== 'object') {
                 console.error('Request data must be object!');
             }
 
-            if (token) {
-                data.token = token;
-            }
+            // if (token) {
+            //     data.token = token;
+            // }
 
             req.data = opts.formPost ? qs.stringify(data) : data;
 
@@ -123,8 +126,7 @@ class RequestManager {
                         loginCode !== null &&
                         loginCode !== undefined &&
                         Number(loginCode) !== 200 &&
-                        req.data &&
-                        req.data.token
+                        opts.auth
                     ) {
                         if (opts.checkToken) {
                             // 登录失效
@@ -135,8 +137,10 @@ class RequestManager {
                             app.setToken('');
                         }
                     }
+                    promise.resolve(res.data);
+                } else {
+                    throw new Error(res.errMsg);
                 }
-                promise.resolve(res.data);
             })
             .catch(error => {
                 promise.reject(error || new Error('网络请求失败'));
@@ -147,9 +151,20 @@ class RequestManager {
 class ChainableRequest extends Configurable {
     protected _requestManagerInstance: RequestManager;
 
+    /**
+     * 基本配置，例如base url
+     */
     protected _config: RequestConfig;
 
-    protected _reqOpts: RequestOptions = {};
+    /**
+     * 请求选项
+     */
+    protected _reqOpts: RequestOptions = {
+        auth: true,
+        level: 1,
+        checkToken: true,
+        qsToken: true
+    };
 
     private _setReqOptions(key, value) {
         const opts = this._reqOpts;
@@ -171,10 +186,10 @@ class ChainableRequest extends Configurable {
             : `${this.config('domain')}${url.startsWith('/') ? '' : '/'}${url}`;
     }
 
-    mapiRequest(req) {
+    protected _getMapiHeader() {
         const app = getApp();
         return app.getSystemInfo().then(systemInfo => {
-            const _header = {
+            return {
                 dpid: app.getOpenId(),
                 token: app.getToken(),
                 appVersion: this.config('version'),
@@ -187,19 +202,24 @@ class ChainableRequest extends Configurable {
                 platform: systemInfo.platform.indexOf('ios') > -1 ? 'iPhone' : 'Android',
                 platformVersion: systemInfo.system.split(' ')[1] || ''
             };
-            req.header = pureAssign(req.header || {}, _header);
-
-            return wxp.request(req).then(res => {
-                if (res && Number(res.statusCode) === 200) {
-                    return res.data;
-                } else {
-                    throw new Error(res.errMsg);
-                }
-            });
         });
     }
 
-    request(obj, opts: RequestOptions) {
+    protected _getCustomApiHeader() {
+        // TODO
+        return Promise.resolve({});
+    }
+
+    protected _getBaseHeader() {
+        return Promise.resolve({
+            appVersion: this.config('version'),
+            appName: this.config('name'),
+            isMicroMessenger: 'true'
+        });
+    }
+
+    request(obj, opts: RequestOptions = {}) {
+        const newOptions: RequestOptions = pureAssign(this._reqOpts, opts || {});
         const app = getApp();
         obj.url = this._getFullUrl(obj.url);
         if (!/https?:\/\//i.test(obj.url)) {
@@ -207,54 +227,63 @@ class ChainableRequest extends Configurable {
                 new Error('请添加request实例的domain配置或者使用绝对http地址请求')
             );
         }
-        if (opts && opts.cookieToken) {
+
+        if (newOptions.auth && newOptions.cookieToken) {
             obj.header = Object.assign({}, obj.header, {
-                Cookie: `${opts.tokenKey || 'token'}=${app.getToken() || ''}`
+                Cookie: `${newOptions.tokenKey || 'token'}=${app.getToken() || ''}`
             });
         }
-        if (opts && opts.formPost) {
+        if (newOptions.formPost) {
             obj.header = Object.assign({}, obj.header, {
                 'Content-Type': 'application/x-www-form-urlencoded'
             });
         }
-        if (opts && opts.qsToken) {
+        if (newOptions.auth && newOptions.qsToken) {
             obj.url = addUrlQuery(obj.url, {
-                [opts.tokenKey || 'token']: getApp().getToken()
+                [newOptions.tokenKey || 'token']: getApp().getToken()
             });
         }
-        if (opts && opts.isMapiRequest) {
-            if (opts.formPost) {
-                obj.data = qs.stringify(obj.data);
-            }
-            return this.mapiRequest(obj);
+
+        let promise;
+
+        if (newOptions.isMapiRequest) {
+            promise = this._getMapiHeader();
+        } else if (newOptions.isCustomRequest) {
+            promise = this._getCustomApiHeader();
+        } else {
+            promise = this._getBaseHeader();
         }
-        return new Promise((resolve, reject) => {
-            const newOptions = pureAssign(this._config, opts);
-            try {
-                this._requestManager.push(
-                    obj,
-                    {
-                        resolve,
-                        reject
-                    },
-                    newOptions
-                );
-            } catch (e) {
-                if (app.debug) {
-                    console.log('[Request] Fail:', e);
-                }
-                // 发送错误时，重置防止阻塞,同时启用正常的API调用
-                this._requestManager.reset();
-                return this._requestManager.wrapRequest(
-                    obj,
-                    {
-                        resolve,
-                        reject
-                    },
-                    newOptions
-                );
-            }
-        });
+
+        return promise.then(
+            header =>
+                new Promise((resolve, reject) => {
+                    try {
+                        obj.header = pureAssign({}, obj.header, header);
+                        this._requestManager.push(
+                            obj,
+                            {
+                                resolve,
+                                reject
+                            },
+                            newOptions
+                        );
+                    } catch (e) {
+                        if (app.debug) {
+                            console.log('[Request] Fail:', e);
+                        }
+                        // 发送错误时，重置防止阻塞,同时启用正常的API调用
+                        this._requestManager.reset();
+                        return this._requestManager.wrapRequest(
+                            obj,
+                            {
+                                resolve,
+                                reject
+                            },
+                            newOptions
+                        );
+                    }
+                })
+        );
     }
 
     // 链式配置
@@ -264,6 +293,33 @@ class ChainableRequest extends Configurable {
             return shadow.mapi();
         }
         this._setReqOptions('isMapiRequest', true);
+        return this as any;
+    }
+
+    custom(): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, this._config);
+            return shadow.custom();
+        }
+        this._setReqOptions('isCustomRequest', true);
+        return this as any;
+    }
+
+    auth(): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, this._config);
+            return shadow.auth();
+        }
+        this._setReqOptions('auth', true);
+        return this as any;
+    }
+
+    tokenKey(key: string): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, this._config);
+            return shadow.tokenKey(key);
+        }
+        this._setReqOptions('tokenKey', key);
         return this as any;
     }
 

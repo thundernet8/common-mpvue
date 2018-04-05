@@ -1,6 +1,9 @@
+import Vue from 'mpvue';
 import Vuex from 'vuex';
 import { StoreOptions } from 'vuex/types/index';
 import { syncStateToStoragePlugin } from './plugin';
+
+Vue.use(Vuex);
 
 export class VuexStore<S> extends Vuex.Store<S> {
     _options: any = {};
@@ -11,13 +14,18 @@ export class VuexStore<S> extends Vuex.Store<S> {
     }
 
     reset() {
-        const { state } = this._options;
+        let { state } = this._options;
+        if (typeof state === 'function') {
+            state = state();
+        }
         this.replaceState({ ...(state || {}) });
     }
 }
 
 export default class PersistStore<S> extends VuexStore<S> {
     static names: string[] = [];
+
+    name: string;
 
     constructor(name, options: StoreOptions<S>) {
         if (PersistStore.names.includes(name)) {
@@ -29,7 +37,15 @@ export default class PersistStore<S> extends VuexStore<S> {
         // 从storage中恢复状态
         const localState = JSON.parse(wx.getStorageSync(name) || '{}');
 
-        const newState = Object.assign(Object.create(null), localState, state || {});
+        let initialState: S = {} as any;
+        if (typeof state === 'function') {
+            const func: Function = state as any;
+            initialState = func();
+        } else {
+            initialState = state!;
+        }
+
+        const newState = Object.assign(Object.create(null), initialState, localState);
         const newPlugins = new Array(0).concat(plugins || [], [syncStateToStoragePlugin(name)]);
 
         const newOptions = Object.assign(
@@ -42,6 +58,8 @@ export default class PersistStore<S> extends VuexStore<S> {
         );
 
         super(newOptions);
+
+        this.name = name;
     }
 }
 

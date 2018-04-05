@@ -1,10 +1,18 @@
 export interface RequestOptions {
     isMapiRequest?: boolean;
 
+    isCustomRequest?: boolean;
+
     /**
      * 请求优先级
      */
     level?: number;
+
+    /**
+     * 是否提交token
+     * 默认true
+     */
+    auth?: boolean;
 
     /**
      * 是否校验Token, 当服务端响应loginCode不为200且请求参数携带token时认为登录态失效，将清理token
@@ -33,8 +41,8 @@ export interface RequestOptions {
      */
     tokenKey?: string;
 
-    /**
-     * 返回数据类型，默认json
-     */
-    respMime?: string;
+    // /**
+    //  * 返回数据类型，默认json
+    //  */
+    // respMime?: string;
 }

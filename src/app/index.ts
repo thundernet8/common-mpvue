@@ -23,15 +23,6 @@ const singleton: any = {};
  * @param props 给app实例扩展更多的方法或属性
  */
 export default function wrap(App, config: AppConfig, props?: { [key: string]: any }) {
-    App.mpType = 'app';
-    const app = new Vue(App);
-    app.$mount();
-
-    const wxapp = getApp();
-    if (!wxapp) {
-        throw new Error('小程序App尚未实例化');
-    }
-
     if (!config.name || !config.version || !config.pkgName) {
         throw new Error('必须提供name,version,pkgName配置项');
     }
@@ -48,13 +39,25 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
         config.catDomain = 'https://catfront.dianping.com/api/log?v=1';
     }
 
+    httpRequest.configAll(config);
+
+    // 启动小程序
+    App.mpType = 'app';
+    const app = new Vue(App);
+    app.$mount();
+
+    const wxapp = getApp();
+    if (!wxapp) {
+        throw new Error('小程序App尚未实例化');
+    }
+
     const isProduct = config.env && config.env.startsWith('pro');
 
     // 实例化一些工具
     singleton.logger = new Logger().configAll(config);
     singleton.emitter = new Emitter();
     singleton.geo = new GeoManager().configAll(config);
-    const storeKey = md5(`${config.pkgName || config.name}_global_state`);
+    const storeKey = `${md5(config.pkgName || config.name)}_global_state`;
     singleton.store = new PersistStore(storeKey, globalStoreOptions);
     singleton.nav = new Navigator();
 
@@ -201,8 +204,6 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
             }
         });
     });
-
-    httpRequest.configAll(config);
 }
 
 /**
@@ -210,30 +211,27 @@ export default function wrap(App, config: AppConfig, props?: { [key: string]: an
  * @param Page page的Vue组件
  * @param storeOptions Vue Store选项
  */
+let store: VuexStore<any>;
+
 export function wrapPage<S>(Page, storeOptions?: StoreOptions<S>) {
-    return (function() {
-        let store: VuexStore<S>;
-        return function() {
-            Page.mpType = 'app';
-            const app = new Vue(Page);
-            app.$mount();
+    Page.mpType = 'page';
+    const app = new Vue(Page);
+    app.$mount();
 
-            const name = app.$options.name;
-            if (!name) {
-                throw new Error('请为页面Vue组件配置独一无二的name');
+    const name = app.$options.name;
+    if (!name) {
+        throw new Error('请为页面Vue组件配置独一无二的name');
+    }
+    if (!store) {
+        store = new VuexStore<any>({
+            state() {
+                return {};
             }
-            if (!store) {
-                store = new VuexStore<any>({
-                    state() {
-                        return {};
-                    }
-                });
-            }
+        });
+    }
 
-            if (storeOptions) {
-                store.registerModule(name, storeOptions);
-                app.$store = store;
-            }
-        };
-    })();
+    if (storeOptions) {
+        store.registerModule(name, storeOptions);
+        app.$store = store;
+    }
 }
