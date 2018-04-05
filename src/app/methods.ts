@@ -87,6 +87,13 @@ export default {
     logout() {
         this.store.reset();
         this.setToken('');
-        return wx.clearStorage();
+        return new Promise((resolve, reject) => {
+            try {
+                wx.clearStorageSync();
+                resolve();
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 };
