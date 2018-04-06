@@ -34,9 +34,9 @@ export default {
 
     getPageLink() {
         const { options, route } = this.getPage();
-        return `${route}?${Object.keys(options).reduce((prev, curr) => {
-            return prev + curr + '=' + options[curr];
-        }, '')}`;
+        return `${route}?${Object.keys(options)
+            .map(key => `${key}=${options[key]}`)
+            .join('&')}`;
     },
 
     getOpenId() {

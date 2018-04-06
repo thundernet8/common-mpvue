@@ -49,11 +49,19 @@ export function getFormatTime(format = 'yyyy/MM/dd HH:ii:ss', d?: Date) {
  * @param {Object} query 键值对
  */
 export function addUrlQuery(url, query) {
-    const urlObj = new URL(url);
+    const urlObj = new URL(url, '/');
     const existQuery = qs.parse(urlObj.query ? urlObj.query.slice(1) : '');
     const newQuery = Object.assign({}, existQuery, query);
     urlObj.set('query', newQuery);
-    return /^https?:\/\//i.test(url) ? urlObj.href : urlObj.href.slice(urlObj.origin.length);
+    if (/^https?:\/\//i.test(url)) {
+        return urlObj.href;
+    }
+    const parts = [urlObj.pathname];
+    const queryKeys = Object.keys(urlObj.query);
+    if (queryKeys.length > 0) {
+        parts.push(queryKeys.map(key => `${key}=${urlObj.query[key]}`).join('&'));
+    }
+    return parts.join('?');
 }
 
 /**

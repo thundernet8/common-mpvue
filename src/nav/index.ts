@@ -25,12 +25,15 @@ export default class Navigator extends Configurable {
      * @param query
      */
     navigateTo(url, query: BaseKV = {}) {
-        let fullUrl = addUrlQuery(url, query);
+        let fullUrl = url;
         if (/^https?/i.test(fullUrl)) {
             // 跳webview
             fullUrl = addUrlQuery(this._WEBVIEW_PAGE, {
-                url: fullUrl
+                url: encodeURIComponent(fullUrl),
+                ...query
             });
+        } else {
+            fullUrl = addUrlQuery(url, query);
         }
         const pageLen = getCurrentPages().length;
         const maxLen = Math.min(10, this.config('pageLimit'));
