@@ -212,6 +212,15 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
         });
     });
 
+    // 添加$app引用至vue实例
+    Object.defineProperty(app, '$app', {
+        configurable: false,
+        enumerable: true,
+        get() {
+            return wxapp;
+        }
+    });
+
     // 添加一个onLaunched生命周期调用，此时getApp已可以使用
     const { onLaunched } = app.$options;
     if (typeof onLaunched === 'function') {
@@ -251,5 +260,14 @@ export class WrapPage<S> {
             WrapPage.store.registerModule(name, storeOptions);
             this.page!.$store = WrapPage.store;
         }
+
+        // 添加$app引用至vue实例
+        Object.defineProperty(this.page, '$app', {
+            configurable: false,
+            enumerable: true,
+            get() {
+                return getApp();
+            }
+        });
     }
 }
