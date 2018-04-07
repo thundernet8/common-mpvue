@@ -1,6 +1,6 @@
 import { Store, StoreOptions } from 'vuex/types/index';
 import { BaseKV } from './general';
-import { NavConfig, RequestConfig, AppConfig, LXConfig } from './config';
+import { NavConfig, RequestConfig, AppConfig } from './config';
 import { NavBarStyleOptions, RequestOptions } from './option';
 
 export interface Request extends ChainableRequest {
@@ -64,12 +64,7 @@ interface ChainableRequest {
     request(req: BaseKV, opts?: RequestOptions): Promise<any>;
 
     /**
-     * 配置请求为mapi
-     */
-    mapi(): ShadowRequest;
-
-    /**
-     * 配置请求为custom api
+     * 配置请求为custom api，添加自定义信息头
      */
     custom(): ShadowRequest;
 
@@ -208,40 +203,6 @@ export interface Navigator {
      * @param navBarOptions
      */
     navigateToH5(url, query?: BaseKV, navBarOptions?: NavBarStyleOptions);
-}
-
-/**
- * 灵犀打点
- */
-export interface LX {
-    start(): void;
-
-    quit(): void;
-
-    init(domain: string, config: LXConfig): void;
-
-    set(key: string, value: any): void;
-
-    moduleClick(moduleId: string): void;
-
-    pageView(pageId: string): void;
-}
-
-/**
- * Cat监控
- */
-export interface OWL {}
-
-export interface Vendor {
-    /**
-     * 灵犀打点
-     */
-    lx: LX;
-
-    /**
-     * Cat监控
-     */
-    owl: OWL;
 }
 
 export interface Logger {

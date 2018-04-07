@@ -38,11 +38,6 @@ export const Utils = _utils;
 export { default as Emitter } from './emitter';
 
 /**
- * Geo
- */
-export { default as Geo } from './geo';
-
-/**
  * Navigator
  */
 export { default as Navigator } from './nav';

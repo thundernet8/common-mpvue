@@ -11,15 +11,11 @@ interface App {
 
     version: string;
 
-    vendor: internal.Vendor;
-
     utils: internal.Utils;
 
     logger: internal.Logger;
 
     emitter: internal.Emitter;
-
-    geo: internal.Geo;
 
     nav: internal.Navigator;
 

@@ -64,11 +64,6 @@ declare namespace WXAPPCommon {
     export interface Emitter extends internal.Emitter {}
 
     /**
-     * Geo
-     */
-    export interface Geo extends internal.Geo {}
-
-    /**
      * Navigator
      */
     export interface Navigator extends internal.Navigator {}

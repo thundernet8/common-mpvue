@@ -1,5 +1,6 @@
 import Configurable from '../base/configurable';
 import { getFormatTime } from '../utils';
+import wxp from 'wxp';
 
 export default class Logger extends Configurable {
     _cache: any[] = [];
@@ -10,18 +11,25 @@ export default class Logger extends Configurable {
     }
 
     report() {
-        if (!this.config('url')) {
-            console.warn('Cat Logger上报url未设置, 请使用app.logger.config("url", "地址")设置');
+        if (!this.config('reportDomain')) {
+            console.warn('Logger上报url未设置, 请使用app.logger.config("url", "地址")设置');
             return;
         }
-        wx.request({
-            method: 'POST',
-            url: this.config('url'),
-            header: {
-                'content-type': 'application/x-www-form-urlencoded'
-            },
-            data: `c=${encodeURIComponent(JSON.stringify(this._cache))}`
-        });
+        const cache = this._cache;
+        this._cache = [];
+        wxp
+            .request({
+                method: 'POST',
+                url: this.config('reportDomain'),
+                header: {
+                    'content-type': 'application/x-www-form-urlencoded'
+                },
+                data: `c=${encodeURIComponent(JSON.stringify(cache))}`
+            })
+            .catch(() => {
+                // 上报失败，归还消息
+                this._cache = new Array(0).concat(this._cache, cache);
+            });
     }
 
     _log(type, ...args) {

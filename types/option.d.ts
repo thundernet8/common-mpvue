@@ -1,6 +1,4 @@
 export interface RequestOptions {
-    isMapiRequest?: boolean;
-
     isCustomRequest?: boolean;
 
     /**

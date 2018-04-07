@@ -1,15 +1,12 @@
 import Vue from 'mpvue';
 import PersistStore from '../store';
-import vendor from '../vendor';
 import md5 from 'md5';
 import { globalStoreOptions, VuexStore } from '../store';
 import methods from './methods';
 import Logger from '../logger';
 import * as utils from '../utils';
 import Emitter from '../emitter';
-import GeoManager from '../geo';
 import { httpRequest } from '../request';
-import { app as owlapp, page, Owl } from '@hfe/mp-owl';
 import { AppConfig } from '../../types/config';
 import { StoreOptions } from 'vuex/types/index';
 import Navigator from '../nav';
@@ -32,12 +29,8 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
         config.env = process.env.NODE_ENV || ('production' as any);
     }
 
-    if (!config.lxDomain) {
-        config.lxDomain = 'https://report.meituan.com';
-    }
-
-    if (!config.catDomain) {
-        config.catDomain = 'https://catfront.dianping.com/api/log?v=1';
+    if (!config.reportDomain) {
+        console.warn('未设置信息上报域名，app.logger将不会上报任何信息');
     }
 
     httpRequest.configAll(config);
@@ -57,36 +50,9 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
     // 实例化一些工具
     singleton.logger = new Logger().configAll(config);
     singleton.emitter = new Emitter();
-    singleton.geo = new GeoManager().configAll(config);
     const storeKey = `${md5(config.pkgName || config.name)}_global_state`;
     singleton.store = new PersistStore(storeKey, globalStoreOptions);
     singleton.nav = new Navigator().configAll(config);
-
-    // vendor补充
-    // 初始化lx
-    vendor.lx.init(config.lxDomain || 'https://report.meituan.com', {
-        appnm: config.name,
-        category: config.category
-    });
-
-    if (config.owl) {
-        const owlConfig = {
-            project: config.pkgName, // 申请project http://cat.dp/cat/s/frontend?op=projectAdd
-            unionId: methods.getUnionId.call(wxapp) || methods.getOpenId.call(wxapp), // 用户的唯一标识，可选，可传 openId或unionId,如果不传，cat SDK 会自动生成一个，作为用户唯一标识，但是用户删除小程序后，会丢失
-            env: isProduct ? 'pro' : 'dev', // 当前环境，默认为 pro，当 env 为 dev 时不上报任何信息
-            wxAppVersion: config.version // 小程序发布版本
-        };
-        vendor.owl = new Owl(owlConfig);
-        global.App = owlapp;
-        global.Page = page;
-        singleton.store.subscribe((mutation, state) => {
-            if (mutation.type === 'updateOpenId' || mutation.type === 'updateUnionId') {
-                const uuid = state.unionId || state.openId;
-                owlConfig.unionId = uuid;
-                vendor.owl = new Owl(owlConfig);
-            }
-        });
-    }
 
     // 扩展app实例方法
     Object.defineProperties(wxapp, {
@@ -146,13 +112,6 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
                 return this.__config.version;
             }
         },
-        vendor: {
-            configurable: false,
-            enumerable: false,
-            get: function() {
-                return vendor;
-            }
-        },
         utils: {
             configurable: false,
             enumerable: false,
@@ -172,13 +131,6 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
             enumerable: false,
             get: function() {
                 return singleton.emitter;
-            }
-        },
-        geo: {
-            configurable: false,
-            enumerable: false,
-            get: function() {
-                return singleton.geo;
             }
         },
         nav: {

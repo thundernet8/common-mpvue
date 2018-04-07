@@ -70,21 +70,10 @@ class RequestManager {
             const promise = anRequest.promise;
             const opts = anRequest.opts;
             const data = req.data || {};
-            // const token = getApp().getToken();
 
-            // if (typeof data === 'object') {
-            //     data.appversion = this._reqConfig.version;
-            //     data.appname = this._reqConfig.name;
-            // } else {
-            //     console.error('Request data must be object!');
-            // }
             if (typeof data !== 'object') {
                 console.error('Request data must be object!');
             }
-
-            // if (token) {
-            //     data.token = token;
-            // }
 
             req.data = opts.formPost ? qs.stringify(data) : data;
 
@@ -186,11 +175,11 @@ class ChainableRequest extends Configurable {
             : `${this.config('domain')}${url.startsWith('/') ? '' : '/'}${url}`;
     }
 
-    protected _getMapiHeader() {
+    protected _getCustomApiHeader() {
         const app = getApp();
         return app.getSystemInfo().then(systemInfo => {
             return {
-                dpid: app.getOpenId(),
+                openId: app.getOpenId(),
                 token: app.getToken(),
                 appVersion: this.config('version'),
                 appName: encodeURIComponent(this.config('name')),
@@ -203,11 +192,6 @@ class ChainableRequest extends Configurable {
                 platformVersion: systemInfo.system.split(' ')[1] || ''
             };
         });
-    }
-
-    protected _getCustomApiHeader() {
-        // TODO
-        return Promise.resolve({});
     }
 
     protected _getBaseHeader() {
@@ -249,9 +233,7 @@ class ChainableRequest extends Configurable {
 
         let promise;
 
-        if (newOptions.isMapiRequest) {
-            promise = this._getMapiHeader();
-        } else if (newOptions.isCustomRequest) {
+        if (newOptions.isCustomRequest) {
             promise = this._getCustomApiHeader();
         } else {
             promise = this._getBaseHeader();
@@ -290,15 +272,6 @@ class ChainableRequest extends Configurable {
     }
 
     // 链式配置
-    mapi(): ShadowRequest {
-        if (this instanceof Request) {
-            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
-            return shadow.mapi();
-        }
-        this._setReqOptions('isMapiRequest', true);
-        return this as any;
-    }
-
     custom(): ShadowRequest {
         if (this instanceof Request) {
             const shadow = new ShadowRequest(this._requestManager, { ...this._config });
