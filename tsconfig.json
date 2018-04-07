@@ -1,15 +1,15 @@
-
 {
     "compilerOptions": {
         "strictNullChecks": true,
         "moduleResolution": "node",
+        "module": "es2015",
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "noUnusedParameters": true,
         "noUnusedLocals": true,
-        "target": "es2015",
+        "target": "es5",
         "lib": ["dom", "es2015", "es2016"],
-        "typeRoots": ["node_modules/@types"],
+        "typeRoots": ["node_modules/@types", "types"],
         "baseUrl": "./src",
         "outDir": "lib",
         "allowJs": false

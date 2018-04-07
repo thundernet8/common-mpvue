@@ -1,8 +1,9 @@
 {
-    "name": "wxapp-common",
+    "name": "wxapp-common-vue",
     "version": "0.0.1",
     "description": "基于mpvue小程序的通用能力封装",
     "main": "index.js",
+    "types": "types/index.d.ts",
     "repository": "ssh://git@git.dianpingoa.com/~wuxueqian/wxapp-common.git",
     "author": "wuxueqian <wuxueqian@meituan.com>",
     "license": "MIT",
@@ -12,7 +13,7 @@
         "mpvue"
     ],
     "scripts": {
-        "build": "rimraf lib && mkdirp lib && cp src/**.d.ts lib/",
+        "build": "rimraf lib && mkdirp lib && tsc",
         "prepublishOnly": "npm run build",
         "lint": "npm run lint:ts",
         "lint:ts": "tslint -e node_modules -c .tslintrc.json src/**/*.ts",
@@ -29,11 +30,26 @@
     },
     "pre-commit": "lint-staged",
     "devDependencies": {
+        "@types/node": "^9.6.1",
         "lint-staged": "6",
+        "mkdirp": "^0.5.1",
         "pre-commit": "^1.2.2",
         "prettier": "^1.11.1",
+        "rimraf": "^2.6.2",
         "tslint": "^5.9.1",
         "tslint-eslint-rules": "^5.1.0",
         "typescript": "^2.8.1"
+    },
+    "dependencies": {
+        "@analytics/wechat-sdk": "^1.3.2",
+        "@dp/sparrow": "^0.1.9-15",
+        "@hfe/mp-owl": "^0.0.6",
+        "left-pad": "^1.2.0",
+        "md5": "^2.2.1",
+        "mpvue": "^1.0.7",
+        "querystring": "^0.2.0",
+        "url-parse": "^1.2.0",
+        "vue": "^2.5.16",
+        "vuex": "^2.5.0"
     }
 }
