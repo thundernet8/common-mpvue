@@ -1,6 +1,6 @@
 import Configurable from '../base/configurable';
 import { getFormatTime } from '../utils';
-import wxp from 'wxp';
+import wxp from '../wxp';
 
 export default class Logger extends Configurable {
     _cache: any[] = [];
