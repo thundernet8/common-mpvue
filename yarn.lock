@@ -8,10 +8,6 @@
   dependencies:
     koa-router next
 
-"@dp/sparrow@^0.1.9-15":
-  version "0.1.9-15"
-  resolved "http://r.npm.sankuai.com/@dp/sparrow/download/@dp/sparrow-0.1.9-15.tgz#99e4d784ecd19e053f4918aec7361c5c891adb7b"
-
 "@hfe/mp-owl@^0.0.6":
   version "0.0.6"
   resolved "http://r.npm.sankuai.com/@hfe/mp-owl/download/@hfe/mp-owl-0.0.6.tgz#44fdae5ac93e6781f77e3a3185ec72cf31948ebf"
