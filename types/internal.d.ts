@@ -1,5 +1,4 @@
-import Vuex from 'vuex';
-import { StoreOptions } from 'vuex/types/index';
+import { Store, StoreOptions } from 'vuex/types/index';
 import { BaseKV } from './general';
 import { NavConfig, RequestConfig, AppConfig, LXConfig } from './config';
 import { NavBarStyleOptions, RequestOptions } from './option';
@@ -117,7 +116,7 @@ export interface PersistStore<S> extends VuexStore<S> {
     new (name, options: StoreOptions<S>): PersistStore<S>;
 }
 
-export interface VuexStore<S> extends Vuex.Store<S> {
+export interface VuexStore<S> extends Store<S> {
     /**
      * 重置Store的状态至初始传入的状态
      */
