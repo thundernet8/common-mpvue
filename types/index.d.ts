@@ -49,17 +49,9 @@ declare namespace WXAPPCommon {
     /**
      * 可持久化至小程序storage的vuex store
      */
-    export class PersistStore<S> extends VuexStore<S> implements internal.PersistStore<S> {
-        /**
-         * @param name Store实例的名称，同时也作为持久化至小程序storage的key，请确保唯一
-         * @param options Vue Store实例化选项
-         */
-        constructor(name: string, options: StoreOptions<S>);
-    }
+    export class PersistStore<S> extends internal.PersistStore<S> {}
 
-    export class VuexStore<S> extends Store<S> implements internal.VuexStore<S> {
-        reset(): void;
-    }
+    export class VuexStore<S> extends internal.VuexStore<S> {}
 
     /**
      * 实用工具函数

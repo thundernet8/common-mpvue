@@ -104,14 +104,15 @@ export interface GlobalStoreState {
     [key: string]: any;
 }
 
-export interface PersistStore<S> extends VuexStore<S> {
+export class PersistStore<S> extends VuexStore<S> {
     /**
-     * Store实例的名称，同时也作为持久化至小程序storage的key，请确保唯一
+     * @param name Store实例的名称，同时也作为持久化至小程序storage的key，请确保唯一
+     * @param options Vue Store实例化选项
      */
-    // new (name, options: StoreOptions<S>): PersistStore<S>;
+    constructor(name: string, options: StoreOptions<S>);
 }
 
-export interface VuexStore<S> extends Store<S> {
+export class VuexStore<S> extends Store<S> {
     /**
      * 重置Store的状态至初始传入的状态
      */
