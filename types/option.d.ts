@@ -34,6 +34,11 @@ export interface RequestOptions {
     cookieToken?: boolean;
 
     /**
+     * 是否在请求头添加token
+     */
+    headerToken?: boolean;
+
+    /**
      * token携带时的字段名，为query参数的key或者header头的key
      * 默认token
      */

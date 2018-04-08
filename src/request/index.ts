@@ -215,6 +215,12 @@ class ChainableRequest extends Configurable {
             );
         }
 
+        if (newOptions.auth && newOptions.headerToken) {
+            obj.header = Object.assign({}, obj.header, {
+                [newOptions.tokenKey || 'token']: app.getToken()
+            });
+        }
+
         if (newOptions.auth && newOptions.cookieToken) {
             obj.header = Object.assign({}, obj.header, {
                 Cookie: `${newOptions.tokenKey || 'token'}=${app.getToken() || ''}`
@@ -296,6 +302,15 @@ class ChainableRequest extends Configurable {
             return shadow.tokenKey(key);
         }
         this._setReqOptions('tokenKey', key);
+        return this as any;
+    }
+
+    headerToken(): ShadowRequest {
+        if (this instanceof Request) {
+            const shadow = new ShadowRequest(this._requestManager, { ...this._config });
+            return shadow.headerToken();
+        }
+        this._setReqOptions('headerToken', true);
         return this as any;
     }
 
