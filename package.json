@@ -1,13 +1,17 @@
 {
     "name": "common-mpvue",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "基于mpvue小程序的通用能力封装",
     "main": "index.js",
     "types": "types/index.d.ts",
     "repository": "ssh://git@github.com:thundernet8/common-mpvue.git",
     "author": "wuxueqian <wuxueqian2010@hotmail.com>",
     "license": "MIT",
-    "keywords": ["wechat", "wechat-miniprogram", "mpvue"],
+    "keywords": [
+        "wechat",
+        "wechat-miniprogram",
+        "mpvue"
+    ],
     "scripts": {
         "build": "rimraf lib && mkdirp lib && tsc",
         "prepublishOnly": "npm run build",
@@ -18,7 +22,11 @@
         "lint-staged:format": "prettier --write"
     },
     "lint-staged": {
-        "src/**/*.{ts,tsx}": ["lint-staged:format", "lint-staged:ts", "git add"]
+        "src/**/*.{ts,tsx}": [
+            "lint-staged:format",
+            "lint-staged:ts",
+            "git add"
+        ]
     },
     "pre-commit": "lint-staged",
     "devDependencies": {
