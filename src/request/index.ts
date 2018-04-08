@@ -128,7 +128,7 @@ class RequestManager {
                     }
                     promise.resolve(res.data);
                 } else {
-                    throw new Error(res.errMsg);
+                    throw new Error(res.data && res.data.message ? res.data.message : res.errMsg);
                 }
             })
             .catch(error => {
