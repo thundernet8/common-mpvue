@@ -32,14 +32,14 @@ declare namespace WXAPPCommon {
      */
     export function wrap(App, config: AppConfig, props?: BaseKV);
 
-    export interface WrapPage<S> {
-        new (Page, storeOptions?: StoreOptions<S>): WrapPage<S>;
+    export class WrapPage<S> {
+        constructor(Page, storeOptions?: StoreOptions<S>);
     }
 
     /**
      * 请求类
      */
-    export interface Request extends internal.Request {}
+    export class Request extends internal.Request {}
 
     /**
      * Promise化的wx API
@@ -69,10 +69,10 @@ declare namespace WXAPPCommon {
     /**
      * EventEmitter
      */
-    export interface Emitter extends internal.Emitter {}
+    export class Emitter extends internal.Emitter {}
 
     /**
      * Navigator
      */
-    export interface Navigator extends internal.Navigator {}
+    export class Navigator extends internal.Navigator {}
 }

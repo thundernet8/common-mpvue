@@ -3,8 +3,8 @@ import { BaseKV } from './general';
 import { NavConfig, RequestConfig, AppConfig } from './config';
 import { NavBarStyleOptions, RequestOptions } from './option';
 
-export interface Request extends ChainableRequest {
-    new (config?: RequestConfig): Request;
+export class Request extends ChainableRequest {
+    new(config?: RequestConfig): Request;
 
     /**
      * 发起GET请求
@@ -39,7 +39,7 @@ export interface Request extends ChainableRequest {
     httpPost(url: string, data?: BaseKV, opts?: RequestOptions): Promise<any>;
 }
 
-interface ShadowRequest extends ChainableRequest {
+declare class ShadowRequest extends ChainableRequest {
     /**
      * 发起GET请求
      * @param url
@@ -55,7 +55,7 @@ interface ShadowRequest extends ChainableRequest {
     POST(url: string, data?: BaseKV): Promise<any>;
 }
 
-interface ChainableRequest {
+declare class ChainableRequest {
     /**
      * 发起http请求
      * @param req
@@ -146,8 +146,8 @@ export interface Utils {
     pureAssign(...args: BaseKV[]): BaseKV;
 }
 
-export interface Emitter {
-    new (): Emitter;
+export class Emitter {
+    constructor();
 
     /**
      * 触发事件
@@ -186,8 +186,8 @@ export interface Emitter {
 
 export interface Geo {}
 
-export interface Navigator {
-    new (config?: NavConfig): Navigator;
+export class Navigator {
+    constructor(config?: NavConfig);
 
     /**
      * 跳转并控制页面栈数量，支持http链接
