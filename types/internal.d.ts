@@ -108,7 +108,7 @@ export interface PersistStore<S> extends VuexStore<S> {
     /**
      * Store实例的名称，同时也作为持久化至小程序storage的key，请确保唯一
      */
-    new (name, options: StoreOptions<S>): PersistStore<S>;
+    // new (name, options: StoreOptions<S>): PersistStore<S>;
 }
 
 export interface VuexStore<S> extends Store<S> {
