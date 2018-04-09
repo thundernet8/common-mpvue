@@ -818,7 +818,7 @@ interface WX {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-login.html#wxloginobject
      * @param obj
      */
-    login(obj?): void;
+    login(obj): void;
 
     /**
      * 校验用户当前session_key是否有效
