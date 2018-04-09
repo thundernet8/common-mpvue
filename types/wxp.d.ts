@@ -1,6 +1,14 @@
 import * as params from './wx';
+import * as internal from './internal';
 
-interface WXP {
+interface WXPExts {
+    /**
+     * 全局的Request实例
+     */
+    httpRequest: internal.Request;
+}
+
+interface WXP extends WXPExts {
     /// 网络
 
     /**

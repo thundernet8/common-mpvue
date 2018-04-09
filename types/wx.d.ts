@@ -1,4 +1,13 @@
-interface WX {
+import * as internal from './internal';
+
+interface WXExts {
+    /**
+     * 全局的Request实例
+     */
+    httpRequest: internal.Request;
+}
+
+interface WX extends WXExts {
     /// 网络
 
     /**
