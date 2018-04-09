@@ -81,14 +81,19 @@ declare class ChainableRequest {
     tokenKey(key: string): ShadowRequest;
 
     /**
+     * 配置请求通过header携带凭据
+     */
+    headerToken(enable?: boolean): ShadowRequest;
+
+    /**
      * 配置请求通过cookie携带凭据
      */
-    cookieToken(): ShadowRequest;
+    cookieToken(enable?: boolean): ShadowRequest;
 
     /**
      * 配置请求为通过url参数携带凭据
      */
-    qsToken(): ShadowRequest;
+    qsToken(enable?: boolean): ShadowRequest;
 
     /**
      * 配置请求如果POST则形式为application/x-www-form-urlencoded

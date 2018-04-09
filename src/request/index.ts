@@ -305,7 +305,7 @@ class ChainableRequest extends Configurable {
         return this as any;
     }
 
-    headerToken(enable: boolean): ShadowRequest {
+    headerToken(enable: boolean = true): ShadowRequest {
         if (this instanceof Request) {
             const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             if (enable) {
@@ -313,11 +313,11 @@ class ChainableRequest extends Configurable {
             }
             return shadow.headerToken(enable);
         }
-        this._setReqOptions('headerToken', true);
+        this._setReqOptions('headerToken', enable);
         return this as any;
     }
 
-    cookieToken(enable: boolean): ShadowRequest {
+    cookieToken(enable: boolean = true): ShadowRequest {
         if (this instanceof Request) {
             const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             if (enable) {
@@ -325,16 +325,16 @@ class ChainableRequest extends Configurable {
             }
             return shadow.cookieToken(enable);
         }
-        this._setReqOptions('cookieToken', true);
+        this._setReqOptions('cookieToken', enable);
         return this as any;
     }
 
-    qsToken(enable: boolean): ShadowRequest {
+    qsToken(enable: boolean = true): ShadowRequest {
         if (this instanceof Request) {
             const shadow = new ShadowRequest(this._requestManager, { ...this._config });
             return shadow.qsToken(enable);
         }
-        this._setReqOptions('qsToken', true);
+        this._setReqOptions('qsToken', enable);
         return this as any;
     }
 
