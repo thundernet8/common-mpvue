@@ -190,8 +190,6 @@ export class Emitter {
     offAll(name: string): Emitter;
 }
 
-export interface Geo {}
-
 export class Navigator {
     constructor(config?: NavConfig);
 
@@ -224,4 +222,12 @@ export interface Logger {
 interface Page {
     route: string;
     options: BaseKV;
+}
+
+interface GlobalData {
+    appOptions: {
+        path: string;
+        query: BaseKV;
+        scene: number;
+    };
 }

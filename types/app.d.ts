@@ -1,8 +1,14 @@
 import * as internal from './internal';
 
 interface AppMethods {
+    /**
+     * 获取系统信息，包含设备信息 网络类型状态 SDK版本等
+     */
     getSystemInfo(): Promise<any>;
 
+    /**
+     * 获取当前页面
+     */
     getPage(): internal.Page;
 
     /**
@@ -68,6 +74,11 @@ interface AppMethods {
 }
 
 interface App extends AppMethods {
+    /**
+     * mpvue实例化小程序提供的globalData
+     */
+    globalData: internal.GlobalData;
+
     env: string;
 
     name: string;
@@ -86,6 +97,9 @@ interface App extends AppMethods {
 
     nav: internal.Navigator;
 
+    /**
+     * 全局的可持久化store，用于存放token openid等用户信息
+     */
     store: internal.PersistStore<internal.GlobalStoreState>;
 }
 
