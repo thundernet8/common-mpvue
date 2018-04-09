@@ -1,6 +1,6 @@
 {
     "name": "common-mpvue",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "description": "基于mpvue小程序的通用能力封装",
     "main": "index.js",
     "types": "types/index.d.ts",
