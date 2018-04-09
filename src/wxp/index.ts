@@ -23,7 +23,14 @@ Promise.prototype.finally = function(finaliser) {
         },
         reason => {
             finaliser();
-            throw new Error(reason);
+            if (reason instanceof Error) {
+                throw reason;
+            } else if (typeof reason === 'string') {
+                throw new Error(reason);
+            } else if (reason && reason.errMsg) {
+                throw new Error(reason.errMsg);
+            }
+            throw reason;
         }
     );
 };

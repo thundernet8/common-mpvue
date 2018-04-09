@@ -19,7 +19,7 @@ export interface RequestOptions {
     checkToken?: boolean;
 
     /**
-     * 是否已form表单形式Post
+     * 是否以form表单形式Post
      */
     formPost?: boolean;
 

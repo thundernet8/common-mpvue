@@ -131,8 +131,18 @@ class RequestManager {
                     throw new Error(res.data && res.data.message ? res.data.message : res.errMsg);
                 }
             })
-            .catch(error => {
-                promise.reject(error || new Error('网络请求失败'));
+            .catch(reason => {
+                let error;
+                if (reason instanceof Error) {
+                    error = reason;
+                } else if (typeof reason === 'string') {
+                    error = new Error(reason);
+                } else if (reason && reason.errMsg) {
+                    error = new Error(reason.errMsg);
+                } else {
+                    error = new Error('网络请求失败');
+                }
+                promise.reject(error);
             });
     }
 }
@@ -149,16 +159,20 @@ class ChainableRequest extends Configurable {
      * 请求选项
      */
     protected _reqOpts: RequestOptions = {
+        isCustomRequest: false,
         auth: true,
         level: 1,
         checkToken: true,
-        qsToken: true
+        qsToken: true,
+        headerToken: false,
+        cookieToken: false,
+        formPost: false
     };
 
     private _setReqOptions(key, value) {
         const opts = this._reqOpts;
         opts[key] = value;
-        this._reqOpts = opts;
+        this._reqOpts = { ...opts };
     }
 
     protected get _requestManager() {
@@ -262,7 +276,7 @@ class ChainableRequest extends Configurable {
                         if (app.debug) {
                             console.log('[Request] Fail:', e);
                         }
-                        // 发送错误时，重置防止阻塞,同时启用正常的API调用
+
                         this._requestManager.reset();
                         return this._requestManager.wrapRequest(
                             obj,
@@ -313,6 +327,9 @@ class ChainableRequest extends Configurable {
             }
             return shadow.headerToken(enable);
         }
+        if (enable) {
+            this.qsToken(false);
+        }
         this._setReqOptions('headerToken', enable);
         return this as any;
     }
@@ -324,6 +341,9 @@ class ChainableRequest extends Configurable {
                 shadow.qsToken(false);
             }
             return shadow.cookieToken(enable);
+        }
+        if (enable) {
+            this.qsToken(false);
         }
         this._setReqOptions('cookieToken', enable);
         return this as any;
