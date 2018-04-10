@@ -210,7 +210,8 @@ export class WrapPage<S> {
 
         if (storeOptions) {
             WrapPage.store.registerModule(name, storeOptions);
-            this.page!.$store = WrapPage.store;
+            this.page.$store = WrapPage.store;
+            this.page.$state = WrapPage.store[name];
         }
 
         // 添加$app引用至vue实例

@@ -126,4 +126,18 @@ import { WrapPage } from 'common-mpvue';
 import Page from './index.vue';
 
 new WrapPage(Page);
+
+// 或者为页面添加vuex store
+new WrapPage(Page, {
+    state() {
+        name: '';
+    },
+    mutations: {
+        updateName(state, name) {
+            state.name = name;
+        }
+    }
+});
 ```
+
+在页面的 vue 单文件组件内，可以通过`this.$app`访问小程序 app 实例，可以通过`this.$store`访问共享的业务 vuex store，可以通过`this.$state`访问该页面的状态模块
