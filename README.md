@@ -110,6 +110,22 @@ httpRequest.POST('https://example.com', { data1: '1' });
 *   form - 通过 form 表单形式 post
 *   custom - 携带自定义 header 头，包含设备信息等
 
+按照约定优于配置的原则，推荐数据接口有统一约定的响应
+
+推荐格式
+
+```json
+{
+    code: 200, // 标记本次响应状态，200为成功，当API不论错误还是异常均是以200的http status响应时，通过此code标记实际的响应status是必要的
+    loginCode: 200, // loginCode可选，当登录态失效时返回非200的loginCode，方便库清理本地登录状态以引导重新登录
+    message: "", // 错误时推荐返回非空message，便于promise catch
+    data: {
+        posts: [],
+        total: 100
+    }
+}
+```
+
 ## 说明
 
 为了将这些能力引入到 app,wx,wxp 等对象上，需要按如下操作：

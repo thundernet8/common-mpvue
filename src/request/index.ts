@@ -72,7 +72,7 @@ class RequestManager {
             const data = req.data || {};
 
             if (typeof data !== 'object') {
-                console.error('Request data must be object!');
+                console.error('请求数据req.data必须是对象!');
             }
 
             req.data = opts.formPost ? qs.stringify(data) : data;
@@ -109,6 +109,9 @@ class RequestManager {
         return wxp
             .request(req)
             .then(res => {
+                if (app.debug) {
+                    console.log('response', res);
+                }
                 if (res && Number(res.statusCode) === 200) {
                     const loginCode = res.data.loginCode;
                     if (
