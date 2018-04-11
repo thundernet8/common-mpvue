@@ -50,6 +50,7 @@ const app = new App();
 app.nav.navigateTo('/pages/index/index', { param1: '1' });
 
 app.nav.navigateToH5('https://example.com');
+// 注意在
 ```
 
 ### Utilities
@@ -61,14 +62,16 @@ const app = getApp();
 
 // 给url添加query参数
 app.utils.addUrlQuery('/pages/index/index', { param1: '1' });
+// => /pages/index/index?param1=1
 
 // 解析url的query为对象
 app.utils.parseUrlQuery('/pages/index/index?param1=1');
+// => {param1: 1}
 ```
 
 ### Request
 
-提供了封装的 Request 对象，适度的请求队列管理，建议使用`wx.httpRequest`或`wxp.httpRequest`
+提供了封装的 Request 对象，适度的请求队列管理，建议使用`wx.httpRequest`或`wxp.httpRequest`这个绑定在全局变量下的固定实例
 
 ```js
 wx.httpRequest.httpGet('https://example.com', { param1: '1' });
@@ -101,6 +104,7 @@ httpRequest.POST('https://example.com', { data1: '1' });
 
 *   auth - 携带 token 用于鉴权，auth(true)
 *   tokenKey - 携带 token 的 key，tokenKey('key')
+*   headerToken - 通过 header 携带 token
 *   cookieToken - 通过 cookie 携带 token
 *   qsToken - 通过 url query 携带 token
 *   form - 通过 form 表单形式 post
@@ -112,11 +116,38 @@ httpRequest.POST('https://example.com', { data1: '1' });
 
 ### 入口 main.js
 
-```js
+```ts
 import { wrap } from 'common-mpvue';
 import App from './index.vue';
 
-wrap(App);
+wrap(App, appConfig, appProps);
+
+wrap的签名如下
+
+/**
+ * 封装和扩展小程序app实例以及wx
+ * @param App 入口的Vue组件
+ * @param config app配置
+ * @param props 给app实例扩展更多的方法或属性
+ */
+wrap(App, config: AppConfig, props?: BaseKV)
+
+interface AppConfig {
+    // 小程序名称
+    name: string;
+    // 小程序版本
+    version: string;
+    // 小程序工程package.json中的name
+    pkgName: string;
+    // 开发环境
+    env?: 'production' | 'development';
+    // api域名
+    domain?: string;
+    // 使用app.logger可上报信息的API
+    reportDomain?: string;
+    // 用于展示H5的页面，例如/pages/webview/webview
+    webviewSchema?: string;
+}
 ```
 
 ### 页面 main.js
