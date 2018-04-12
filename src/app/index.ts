@@ -210,8 +210,23 @@ export class WrapPage<S> {
 
         if (storeOptions) {
             WrapPage.store.registerModule(name, storeOptions);
-            this.page.$store = WrapPage.store;
-            this.page.$state = WrapPage.store[name];
+            Object.defineProperty(this.page, '$store', {
+                configurable: false,
+                enumerable: true,
+                get: function() {
+                    return WrapPage.store;
+                }
+            });
+            Object.defineProperty(this.page, '$state', {
+                configurable: false,
+                enumerable: true,
+                get: function() {
+                    if (WrapPage.store.state) {
+                        return WrapPage.store.state[name];
+                    }
+                    return null;
+                }
+            });
         }
 
         // 添加$app引用至vue实例
