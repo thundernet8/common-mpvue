@@ -102,7 +102,7 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
             configurable: false,
             enumerable: false,
             get: function() {
-                return !isProduct;
+                return !isProduct || this.__config.debug;
             }
         },
         version: {

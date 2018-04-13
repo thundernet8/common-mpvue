@@ -3,6 +3,7 @@ export interface BaseConfig {
     version: string;
     pkgName: string;
     env?: 'production' | 'development';
+    debug?: boolean;
 }
 
 export interface AppConfig extends BaseConfig {

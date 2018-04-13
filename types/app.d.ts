@@ -79,22 +79,49 @@ interface App extends AppMethods {
      */
     globalData: internal.GlobalData;
 
+    /**
+     * 工程环境，例如development/production
+     */
     env: string;
 
+    /**
+     * 小程序的名称
+     */
     name: string;
 
+    /**
+     * 是否开发模式
+     */
     dev: boolean;
 
+    /**
+     * 是否调试模式，调试模式包含开发模式以及指定开启debug的生产模式
+     */
     debug: boolean;
 
+    /**
+     * 小程序版本
+     */
     version: string;
 
+    /**
+     * 一些实用工具方法
+     */
     utils: internal.Utils;
 
+    /**
+     * 简单的日志记录，开发走console，生产可配置上报服务器
+     */
     logger: internal.Logger;
 
+    /**
+     * 订阅/发布器，用于跨页面通信
+     */
     emitter: internal.Emitter;
 
+    /**
+     * 小程序内导航优化方法等
+     */
     nav: internal.Navigator;
 
     /**
