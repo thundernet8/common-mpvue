@@ -1,6 +1,6 @@
 import Vue from 'mpvue';
 import Vuex from 'vuex';
-import { StoreOptions } from 'vuex/types/index';
+import { StoreOptions, Module, ModuleOptions } from 'vuex/types/index';
 import { syncStateToStoragePlugin } from './plugin';
 
 Vue.use(Vuex);
@@ -8,9 +8,20 @@ Vue.use(Vuex);
 export class VuexStore<S> extends Vuex.Store<S> {
     _options: any = {};
 
+    _registeredModules: { path: string | string[]; module; options?: ModuleOptions }[] = [];
+
     constructor(options: StoreOptions<S>) {
         super(options);
         this._options = options;
+    }
+
+    registerModule<T>(path: string | string[], module: Module<T, S>, options?: ModuleOptions) {
+        this._registeredModules.push({
+            path,
+            module,
+            options
+        });
+        super.registerModule(path as any, module, options);
     }
 
     reset() {
@@ -19,6 +30,9 @@ export class VuexStore<S> extends Vuex.Store<S> {
             state = state();
         }
         this.replaceState({ ...(state || {}) });
+        this._registeredModules.forEach(({ path, module, options }) => {
+            this.registerModule(path, module, options);
+        });
     }
 }
 
