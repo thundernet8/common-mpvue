@@ -189,6 +189,8 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
 export class WrapPage<S> {
     static store: VuexStore<any>;
 
+    static names: string[] = [];
+
     page: Vue = null;
 
     constructor(Page, storeOptions?: StoreOptions<S>) {
@@ -208,7 +210,8 @@ export class WrapPage<S> {
             });
         }
 
-        if (storeOptions) {
+        if (storeOptions && !WrapPage.names.includes(name)) {
+            WrapPage.names.push(name);
             WrapPage.store.registerModule(name, storeOptions);
             Object.defineProperty(this.page, '$store', {
                 configurable: false,
