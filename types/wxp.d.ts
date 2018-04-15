@@ -404,9 +404,8 @@ interface WXP extends WXPExts {
     /**
      * 获取系统信息
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/systeminfo.html#wxgetsysteminfoobject
-     * @param obj
      */
-    getSystemInfo(obj): Promise<any>;
+    getSystemInfo(): Promise<any>;
 
     /**
      * 获取系统信息同步接口
