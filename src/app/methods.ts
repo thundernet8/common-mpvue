@@ -1,3 +1,5 @@
+import wxp from '../wxp';
+
 export default {
     getSystemInfo() {
         const sysInfo = wx.getSystemInfoSync() || {};
@@ -7,7 +9,7 @@ export default {
             }
         }
 
-        return wx
+        return wxp
             .getNetworkType()
             .then(res => {
                 sysInfo.networkType = res.networkType;
