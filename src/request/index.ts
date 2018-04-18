@@ -5,6 +5,7 @@ import { RequestOptions } from '../../types/option';
 import { BaseKV } from '../../types/general';
 import { pureAssign, addUrlQuery } from '../utils';
 import wxp from '../wxp';
+import SystemEvent from '../enum/event';
 
 interface RequestQueueItem {
     promise: { resolve; reject };
@@ -125,6 +126,11 @@ class RequestManager {
                             if (app.debug) {
                                 console.warn('Warn: 登陆态失效，正在进行登出');
                             }
+
+                            // 发送logout事件
+                            app.emitter.emit(SystemEvent.LOGOUT, {
+                                msg: '登陆态失效，自动登出'
+                            });
 
                             app.setToken('');
                         }

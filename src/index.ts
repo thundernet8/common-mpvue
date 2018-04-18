@@ -1,6 +1,14 @@
 import * as _utils from './utils';
 import mp from './base/mp';
 
+/**
+ * Enums
+ */
+export { default as SystemEvent } from './enum/event';
+
+/**
+ * wx Global
+ */
 export const wx = mp.wx;
 
 export const getApp = mp.getApp;
