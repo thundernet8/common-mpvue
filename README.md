@@ -15,7 +15,7 @@ wxp.request({ ...config }).then(resp => {
 ```js
 import { PersistStore } from 'common-mpvue';
 
-const store = new PersistStore({
+const store = new PersistStore(storageKey, {
     ...storeOptions
 });
 ```
@@ -50,7 +50,7 @@ const app = new App();
 app.nav.navigateTo('/pages/index/index', { param1: '1' });
 
 app.nav.navigateToH5('https://example.com');
-// 注意在
+// 注意配置小程序webview页面 /pages/webview/webview
 ```
 
 ### Utilities
