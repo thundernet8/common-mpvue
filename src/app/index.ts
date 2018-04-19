@@ -220,6 +220,13 @@ export class WrapPage<S> {
                     return WrapPage.store;
                 }
             });
+            Object.defineProperty(this.page, '$_store', {
+                configurable: false,
+                enumerable: true,
+                get: function() {
+                    return WrapPage.store;
+                }
+            });
             Object.defineProperty(this.page, '$state', {
                 configurable: false,
                 enumerable: true,

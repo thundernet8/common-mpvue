@@ -1,4 +1,5 @@
 import wxp from '../wxp';
+import SystemEvent from '../enum/event';
 
 export default {
     getSystemInfo() {
@@ -76,6 +77,9 @@ export default {
     logout() {
         this.store.reset();
         this.setToken('');
+        this.emitter.emit(SystemEvent.LOGOUT, {
+            msg: '用户主动登出'
+        });
         return new Promise((resolve, reject) => {
             try {
                 wx.clearStorageSync();
