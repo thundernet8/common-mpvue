@@ -1,5 +1,6 @@
 import * as params from './wx';
 import * as internal from './internal';
+import { BaseKV } from './general';
 
 interface WXPExts {
     /**
@@ -259,14 +260,14 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/file.html#wxsavefileobject
      * @param obj
      */
-    saveFile(obj): Promise<any>;
+    saveFile(obj: params.SaveFileParamCommonObject): Promise<any>;
 
     /**
      * 获取文件信息
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/getFileInfo.html
      * @param obj
      */
-    getFileInfo(obj): Promise<any>;
+    getFileInfo(obj: params.GetFileInfoParamCommonObject): Promise<any>;
 
     /**
      * 获取本地已保存的文件列表
@@ -303,7 +304,7 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/data.html#wxsetstorageobject
      * @param obj
      */
-    setStorage(obj): Promise<any>; // TODO
+    setStorage(obj: params.SetStorageParamCommonObject): Promise<any>;
 
     /**
      * 将 data 存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的内容，这是一个同步接口
@@ -311,14 +312,14 @@ interface WXP extends WXPExts {
      * @param key
      * @param data
      */
-    setStorageSync(key: string, data);
+    setStorageSync(key: string, data: string | BaseKV);
 
     /**
      * 从本地缓存中异步获取指定 key 对应的内容
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/data.html#wxgetstorageobject
      * @param obj
      */
-    getStorage(obj): Promise<any>; // TODO
+    getStorage(obj: params.GetStorageParamCommonObject): Promise<any>;
 
     /**
      * 从本地缓存中同步获取指定 key 对应的内容
@@ -345,7 +346,7 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/data.html#wxremovestorageobject
      * @param obj
      */
-    removeStorage(obj): Promise<any>;
+    removeStorage(obj: params.RemoveStorageParamCommonObject): Promise<any>;
 
     /**
      * 从本地缓存中同步移除指定 key
@@ -373,7 +374,7 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/location.html#wxgetlocationobject
      * @param obj
      */
-    getLocation(obj): Promise<any>;
+    getLocation(obj?: params.GetLocationParamCommonObject): Promise<any>;
 
     /**
      * 打开地图选择位置
@@ -389,7 +390,7 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/location.html#wxopenlocationobject
      * @param obj
      */
-    openLocation(obj): Promise<any>;
+    openLocation(obj: params.OpenLocationParamCommonObject): Promise<any>;
 
     /**
      * 创建并返回 map 上下文 mapContext 对象。在自定义组件下，第二个参数传入组件实例this，以操作组件内 <map/> 组件
@@ -481,21 +482,21 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/phonecall.html#wxmakephonecallobject
      * @param obj
      */
-    makePhoneCall(obj): Promise<any>;
+    makePhoneCall(obj: params.MakePhoneCallParamCommonObject): Promise<any>;
 
     /**
      * 调起客户端扫码界面，扫码成功后返回对应的结果
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/scancode.html#wxscancodeobject
      * @param obj
      */
-    scanCode(obj): Promise<any>;
+    scanCode(obj?: params.ScanCodeParamCommonObject): Promise<any>;
 
     /**
      * 设置系统剪贴板的内容
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/clipboard.html#wxsetclipboarddataobject
      * @param obj
      */
-    setClipboardData(obj): Promise<any>;
+    setClipboardData(obj: params.SetClipboardDataParamCommonObject): Promise<any>;
 
     /**
      * 获取系统剪贴板内容
@@ -553,7 +554,7 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/phone-contact.html#wxaddphonecontactobject
      * @param obj
      */
-    addPhoneContact(obj): Promise<any>;
+    addPhoneContact(obj: params.AddPhoneContactParamCommonObject): Promise<any>;
 
     // TODO NFC
 
@@ -697,7 +698,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/ui.html#wxsettopbartextobject
      * @param obj
      */
-    setTopBarText(obj): Promise<any>;
+    setTopBarText(obj: params.SetTopBarTextParamCommonObject): Promise<any>;
 
     // - 导航
 
@@ -753,7 +754,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/scroll.html
      * @param obj
      */
-    pageScrollTo(obj): void;
+    pageScrollTo(obj: params.PageScrollToParamCommonObject): void;
 
     // - 绘图
 
@@ -810,7 +811,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/ext-api.html#wxgetextconfigobject
      * @param obj
      */
-    getExtConfig(obj): void;
+    getExtConfig(obj?): void;
 
     /**
      * 获取第三方平台自定义的数据字段的同步接口
@@ -827,7 +828,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-login.html#wxloginobject
      * @param obj
      */
-    login(obj?): Promise<any>;
+    login(obj?: params.LoginParamCommonObject): Promise<any>;
 
     /**
      * 校验用户当前session_key是否有效
@@ -843,7 +844,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/authorize.html
      * @param obj
      */
-    authorize(obj): Promise<any>;
+    authorize(obj: params.AuthorizeParamCommonObject): Promise<any>;
 
     // - 用户信息
 
@@ -853,7 +854,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/open.html#wxgetuserinfoobject
      * @param obj
      */
-    getUserInfo(obj): Promise<any>;
+    getUserInfo(obj: params.GetUserInfoParamCommonObject): Promise<any>;
 
     // - 微信支付
 
@@ -862,7 +863,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-pay.html#wxrequestpaymentobject
      * @param obj
      */
-    requestPayment(obj): Promise<any>;
+    requestPayment(obj: params.RequestPaymentParamCommonObject): Promise<any>;
 
     // - 转发
 
@@ -892,7 +893,7 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/share.html#wxgetshareinfoobject
      * @param obj
      */
-    getShareInfo(obj): Promise<any>;
+    getShareInfo(obj: params.GetShareInfoParamCommonObject): Promise<any>;
 
     // - 收货地址
 
@@ -955,14 +956,14 @@ interface WXP extends WXPExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/navigateToMiniProgram.html
      * @param obj
      */
-    navigateToMiniProgram(obj): Promise<any>;
+    navigateToMiniProgram(obj: params.NavigateToMiniProgramParamCommonObject): Promise<any>;
 
     /**
      * 返回到上一个小程序，只有在当前小程序是被其他小程序打开时可以调用成功
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/navigateBackMiniProgram.html
      * @param obj
      */
-    navigateBackMiniProgram(obj): Promise<any>;
+    navigateBackMiniProgram(obj: params.NavigateBackMiniProgramParamCommonObject): Promise<any>;
 
     // - 获取发票抬头
 

@@ -1,4 +1,5 @@
 import * as internal from './internal';
+import { BaseKV } from './general';
 
 interface WXExts {
     /**
@@ -258,14 +259,14 @@ interface WX extends WXExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/file.html#wxsavefileobject
      * @param obj
      */
-    saveFile(obj): void;
+    saveFile(obj: SaveFileParamObject): void;
 
     /**
      * 获取文件信息
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/getFileInfo.html
      * @param obj
      */
-    getFileInfo(obj): void;
+    getFileInfo(obj: GetFileInfoParamObject): void;
 
     /**
      * 获取本地已保存的文件列表
@@ -302,7 +303,7 @@ interface WX extends WXExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/data.html#wxsetstorageobject
      * @param obj
      */
-    setStorage(obj): void; // TODO
+    setStorage(obj: SetStorageParamObject): void; // TODO
 
     /**
      * 将 data 存储在本地缓存中指定的 key 中，会覆盖掉原来该 key 对应的内容，这是一个同步接口
@@ -310,14 +311,14 @@ interface WX extends WXExts {
      * @param key
      * @param data
      */
-    setStorageSync(key: string, data);
+    setStorageSync(key: string, data: string | BaseKV);
 
     /**
      * 从本地缓存中异步获取指定 key 对应的内容
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/data.html#wxgetstorageobject
      * @param obj
      */
-    getStorage(obj): void; // TODO
+    getStorage(obj: GetStorageParamCommonObject): void;
 
     /**
      * 从本地缓存中同步获取指定 key 对应的内容
@@ -344,7 +345,7 @@ interface WX extends WXExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/data.html#wxremovestorageobject
      * @param obj
      */
-    removeStorage(obj): void;
+    removeStorage(obj: RemoveStorageParamObject): void;
 
     /**
      * 从本地缓存中同步移除指定 key
@@ -372,7 +373,7 @@ interface WX extends WXExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/location.html#wxgetlocationobject
      * @param obj
      */
-    getLocation(obj): void;
+    getLocation(obj: GetLocationParamObject): void;
 
     /**
      * 打开地图选择位置
@@ -388,7 +389,7 @@ interface WX extends WXExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/location.html#wxopenlocationobject
      * @param obj
      */
-    openLocation(obj): void;
+    openLocation(obj: OpenLocationParamObject): void;
 
     /**
      * 创建并返回 map 上下文 mapContext 对象。在自定义组件下，第二个参数传入组件实例this，以操作组件内 <map/> 组件
@@ -481,21 +482,21 @@ interface WX extends WXExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/phonecall.html#wxmakephonecallobject
      * @param obj
      */
-    makePhoneCall(obj): void;
+    makePhoneCall(obj: MakePhoneCallParamObject): void;
 
     /**
      * 调起客户端扫码界面，扫码成功后返回对应的结果
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/scancode.html#wxscancodeobject
      * @param obj
      */
-    scanCode(obj): void;
+    scanCode(obj: ScanCodeParamObject): void;
 
     /**
      * 设置系统剪贴板的内容
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/clipboard.html#wxsetclipboarddataobject
      * @param obj
      */
-    setClipboardData(obj): void;
+    setClipboardData(obj: SetClipboardDataParamObject): void;
 
     /**
      * 获取系统剪贴板内容
@@ -553,7 +554,7 @@ interface WX extends WXExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/phone-contact.html#wxaddphonecontactobject
      * @param obj
      */
-    addPhoneContact(obj): void;
+    addPhoneContact(obj: AddPhoneContactParamObject): void;
 
     // TODO NFC
 
@@ -697,7 +698,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/ui.html#wxsettopbartextobject
      * @param obj
      */
-    setTopBarText(obj): void;
+    setTopBarText(obj: SetTopBarTextParamObject): void;
 
     // - 导航
 
@@ -753,7 +754,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/scroll.html
      * @param obj
      */
-    pageScrollTo(obj): void;
+    pageScrollTo(obj: PageScrollToParamObject): void;
 
     // - 绘图
 
@@ -810,7 +811,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/ext-api.html#wxgetextconfigobject
      * @param obj
      */
-    getExtConfig(obj): void;
+    getExtConfig(obj: BaseParamObject): void;
 
     /**
      * 获取第三方平台自定义的数据字段的同步接口
@@ -827,7 +828,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-login.html#wxloginobject
      * @param obj
      */
-    login(obj): void;
+    login(obj: LoginParamObject): void;
 
     /**
      * 校验用户当前session_key是否有效
@@ -843,7 +844,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/authorize.html
      * @param obj
      */
-    authorize(obj): void;
+    authorize(obj: AuthorizeParamObject): void;
 
     // - 用户信息
 
@@ -853,7 +854,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/open.html#wxgetuserinfoobject
      * @param obj
      */
-    getUserInfo(obj): void;
+    getUserInfo(obj: GetUserInfoParamObject): void;
 
     // - 微信支付
 
@@ -862,7 +863,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/api-pay.html#wxrequestpaymentobject
      * @param obj
      */
-    requestPayment(obj): void;
+    requestPayment(obj: RequestPaymentParamObject): void;
 
     // - 转发
 
@@ -892,7 +893,7 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/share.html#wxgetshareinfoobject
      * @param obj
      */
-    getShareInfo(obj): void;
+    getShareInfo(obj: GetShareInfoParamObject): void;
 
     // - 收货地址
 
@@ -955,14 +956,14 @@ interface WX extends WXExts {
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/navigateToMiniProgram.html
      * @param obj
      */
-    navigateToMiniProgram(obj): void;
+    navigateToMiniProgram(obj: NavigateToMiniProgramParamObject): void;
 
     /**
      * 返回到上一个小程序，只有在当前小程序是被其他小程序打开时可以调用成功
      * @see https://mp.weixin.qq.com/debug/wxadoc/dev/api/navigateBackMiniProgram.html
      * @param obj
      */
-    navigateBackMiniProgram(obj): void;
+    navigateBackMiniProgram(obj: NavigateBackMiniProgramParamObject): void;
 
     // - 获取发票抬头
 
@@ -1456,6 +1457,441 @@ export interface NavigateBackParamCommonObject {
 }
 
 interface NavigateBackParamObject extends NavigateBackParamCommonObject {}
+
+export interface SaveFileParamCommonObject {
+    /**
+     * 需要保存的文件的临时路径
+     */
+    tempFilePath: string;
+}
+
+interface SaveFileParamObject extends BaseParamObject, SaveFileParamCommonObject {}
+
+export interface GetFileInfoParamCommonObject {
+    /**
+     * 本地文件路径
+     */
+    filePath: string;
+
+    /**
+     * 计算文件摘要的算法，默认值 md5，有效值：md5，sha1
+     */
+    digestAlgorithm?: 'md5' | 'sha1';
+}
+
+interface GetFileInfoParamObject extends BaseParamObject, GetFileInfoParamCommonObject {}
+
+export interface SetStorageParamCommonObject {
+    /**
+     * 本地缓存中的指定的 key
+     */
+    key: string;
+
+    /**
+     * 需要存储的内容
+     */
+    data: string | BaseKV;
+}
+
+interface SetStorageParamObject extends BaseParamObject, SetStorageParamCommonObject {}
+
+export interface GetStorageParamCommonObject {
+    /**
+     * 本地缓存中的指定的 key
+     */
+    key: string;
+}
+
+interface GetStorageParamObject extends BaseParamObject, GetStorageParamCommonObject {}
+
+export interface RemoveStorageParamCommonObject {
+    /**
+     * 本地缓存中的指定的 key
+     */
+    key: string;
+}
+
+interface RemoveStorageParamObject extends BaseParamObject, RemoveStorageParamCommonObject {}
+
+export interface GetLocationParamCommonObject {
+    /**
+     * 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于wx.openLocation的坐标
+     */
+    type?: 'wgs84' | 'gcj02';
+
+    /**
+     * 传入 true 会返回高度信息，由于获取高度需要较高精确度，会减慢接口返回速度
+     */
+    altitude?: boolean;
+}
+
+interface GetLocationParamObject extends BaseParamObject, GetLocationParamCommonObject {}
+
+export interface OpenLocationParamCommonObject {
+    /**
+     * 纬度，范围为-90~90，负数表示南纬
+     */
+    latitude: number;
+
+    /**
+     * 经度，范围为-180~180，负数表示西经
+     */
+    longitude: number;
+
+    /**
+     * 缩放比例，范围5~18，默认为18
+     */
+    scale?: number;
+
+    /**
+     * 位置名
+     */
+    name?: string;
+
+    /**
+     * 地址的详细说明
+     */
+    address?: string;
+}
+
+interface OpenLocationParamObject extends BaseParamObject, OpenLocationParamCommonObject {}
+
+export interface MakePhoneCallParamCommonObject {
+    /**
+     * 需要拨打的电话号码
+     */
+    phoneNumber: string;
+}
+
+interface MakePhoneCallParamObject extends BaseParamObject, MakePhoneCallParamCommonObject {}
+
+export interface ScanCodeParamCommonObject {
+    /**
+     * 是否只能从相机扫码，不允许从相册选择图片
+     */
+    onlyFromCamera?: boolean;
+
+    /**
+     * 扫码类型，参数类型是数组，二维码是'qrCode'，一维码是'barCode'，DataMatrix是‘datamatrix’，pdf417是‘pdf417
+     */
+    scanType?: string[];
+}
+
+interface ScanCodeParamObject extends BaseParamObject, ScanCodeParamCommonObject {}
+
+export interface SetClipboardDataParamCommonObject {
+    /**
+     * 需要设置的内容
+     */
+    data: string;
+}
+
+interface SetClipboardDataParamObject extends BaseParamObject, SetClipboardDataParamCommonObject {}
+
+export interface AddPhoneContactParamCommonObject {
+    /**
+     * 头像本地文件路径
+     */
+    photoFilePath?: string;
+
+    /**
+     * 昵称
+     */
+    nickName?: string;
+
+    /**
+     * 姓氏
+     */
+    lastName?: string;
+
+    /**
+     * 中间名
+     */
+    middleName?: string;
+
+    /**
+     * 名字
+     */
+    firstName: string;
+
+    /**
+     * 备注
+     */
+    remark?: string;
+
+    /**
+     * 手机号
+     */
+    mobilePhoneNumber?: string;
+
+    /**
+     * 微信号
+     */
+    weChatNumber?: string;
+
+    /**
+     * 联系地址国家
+     */
+    addressCountry?: string;
+
+    /**
+     * 联系地址省份
+     */
+    addressState?: string;
+
+    /**
+     * 联系地址城市
+     */
+    addressCity?: string;
+
+    /**
+     * 联系地址街道
+     */
+    addressStreet?: string;
+
+    /**
+     * 联系地址邮政编码
+     */
+    addressPostalCode?: string;
+
+    /**
+     * 公司
+     */
+    organization?: string;
+
+    /**
+     * 职位
+     */
+    title?: string;
+
+    /**
+     * 工作传真
+     */
+    workFaxNumber?: string;
+
+    /**
+     * 工作电话
+     */
+    workPhoneNumber?: string;
+
+    /**
+     * 公司电话
+     */
+    hostNumber?: string;
+
+    /**
+     * 电子邮件
+     */
+    email?: string;
+
+    /**
+     * 网站
+     */
+    url?: string;
+
+    /**
+     * 工作地址国家
+     */
+    workAddressCountry?: string;
+
+    /**
+     * 工作地址省份
+     */
+    workAddressState?: string;
+
+    /**
+     * 工作地址城市
+     */
+    workAddressCity?: string;
+
+    /**
+     * 工作地址街道
+     */
+    workAddressStreet?: string;
+
+    /**
+     * 工作地址邮政编码
+     */
+    workAddressPostalCode?: string;
+
+    /**
+     * 住宅传真
+     */
+    homeFaxNumber?: string;
+
+    /**
+     * 住宅电话
+     */
+    homePhoneNumber?: string;
+
+    /**
+     * 住宅地址国家
+     */
+    homeAddressCountry?: string;
+
+    /**
+     * 住宅地址省份
+     */
+    homeAddressState?: string;
+
+    /**
+     * 住宅地址城市
+     */
+    homeAddressCity?: string;
+
+    /**
+     * 住宅地址街道
+     */
+    homeAddressStreet?: string;
+
+    /**
+     * 住宅地址邮政编码
+     */
+    homeAddressPostalCode?: string;
+}
+
+interface AddPhoneContactParamObject extends BaseParamObject, AddPhoneContactParamCommonObject {}
+
+export interface SetTopBarTextParamCommonObject {
+    /**
+     * 置顶栏文字内容
+     */
+    text: string;
+}
+
+interface SetTopBarTextParamObject extends BaseParamObject, SetTopBarTextParamCommonObject {}
+
+export interface PageScrollToParamCommonObject {
+    /**
+     * 滚动到页面的目标位置（单位px）
+     */
+    scrollTop: number;
+
+    /**
+     * 滚动动画的时长，默认300ms，单位 ms
+     */
+    duration?: number;
+}
+
+interface PageScrollToParamObject extends BaseParamObject, PageScrollToParamCommonObject {}
+
+export interface LoginParamCommonObject {
+    /**
+     * 超时时间，单位 ms
+     */
+    timeout?: number;
+}
+
+interface LoginParamObject extends BaseParamObject, LoginParamCommonObject {}
+
+export interface AuthorizeParamCommonObject {
+    /**
+     * 需要获取权限的scope
+     * @see https://developers.weixin.qq.com/miniprogram/dev/api/authorize-index.html#scope-%E5%88%97%E8%A1%A8
+     */
+    scope: string;
+}
+
+interface AuthorizeParamObject extends BaseParamObject, AuthorizeParamCommonObject {}
+
+export interface GetUserInfoParamCommonObject {
+    /**
+     * 是否带上登录态信息
+     */
+    withCredentials?: boolean;
+
+    /**
+     * 指定返回用户信息的语言，zh_CN 简体中文，zh_TW 繁体中文，en 英文。默认为en。
+     */
+    lang?: string;
+
+    /**
+     * 超时时间，单位 ms
+     */
+    timeout?: number;
+}
+
+interface GetUserInfoParamObject extends BaseParamObject, GetUserInfoParamCommonObject {}
+
+export interface RequestPaymentParamCommonObject {
+    /**
+     * 时间戳从1970年1月1日00:00:00至今的秒数,即当前的时间
+     */
+    timeStamp: string;
+
+    /**
+     * 随机字符串，长度为32个字符以下
+     */
+    nonceStr: string;
+
+    /**
+     * 统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
+     */
+    package: string;
+
+    /**
+     * 签名算法，暂支持 MD5
+     */
+    signType: string;
+
+    /**
+     * 签名,具体签名方案参见小程序支付接口文档
+     * @see https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
+     */
+    paySign: string;
+}
+
+interface RequestPaymentParamObject extends BaseParamObject, RequestPaymentParamCommonObject {}
+
+export interface GetShareInfoParamCommonObject {
+    shareTicket: string;
+
+    /**
+     * 超时时间，单位 ms
+     */
+    timeout?: number;
+}
+
+interface GetShareInfoParamObject extends BaseParamObject, GetShareInfoParamCommonObject {}
+
+export interface NavigateToMiniProgramParamCommonObject {
+    /**
+     * 要打开的小程序 appId
+     */
+    appId: string;
+
+    /**
+     * 打开的页面路径，如果为空则打开首页
+     */
+    path?: string;
+
+    /**
+     * 需要传递给目标小程序的数据，目标小程序可在 App.onLaunch()，App.onShow() 中获取到这份数据
+     * @see https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/app.html
+     */
+    extraData?: BaseKV;
+
+    /**
+     * 要打开的小程序版本，有效值 develop（开发版），trial（体验版），release（正式版） ，仅在当前小程序为开发版或体验版时此参数有效；如果当前小程序是体验版或正式版，则打开的小程序必定是正式版。默认值 release
+     */
+    envVersion?: string;
+}
+
+interface NavigateToMiniProgramParamObject
+    extends BaseParamObject,
+        NavigateToMiniProgramParamCommonObject {}
+
+export interface NavigateBackMiniProgramParamCommonObject {
+    /**
+     * 需要传递给目标小程序的数据，目标小程序可在 App.onLaunch()，App.onShow() 中获取到这份数据
+     * @see https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/app.html
+     */
+    extraData?: BaseKV;
+}
+
+interface NavigateBackMiniProgramParamObject
+    extends BaseParamObject,
+        NavigateBackMiniProgramParamCommonObject {}
 
 ///// Ohters
 
