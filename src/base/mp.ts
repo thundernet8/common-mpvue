@@ -1,5 +1,9 @@
+import polyfill from '../web/polyfill';
+
+const mp = polyfill();
+
 export default {
-    wx: wx,
-    getApp: getApp,
-    getCurrentPages: getCurrentPages
+    wx: mp.wx || wx,
+    getApp: mp.getApp || getApp,
+    getCurrentPages: mp.getCurrentPages || getCurrentPages
 };

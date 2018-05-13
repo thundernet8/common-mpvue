@@ -12,12 +12,22 @@ export default function polyfill() {
         // polyfill wx
         window.wx = wx;
         // polyfill getApp
-        window.getApp = function() {
+        const getApp = function() {
             return window.__mpapp__;
         };
+        window.getApp = getApp;
         // polyfill getCurrentPages
-        window.getCurrentPages = function() {
+        const getCurrentPages = function() {
             return [];
         };
+        window.getCurrentPages = getCurrentPages;
+
+        return {
+            wx,
+            getApp,
+            getCurrentPages
+        };
+    } else {
+        return {};
     }
 }
