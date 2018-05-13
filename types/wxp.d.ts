@@ -47,7 +47,9 @@ interface WXP extends WXPExts {
      * @see https://developers.weixin.qq.com/miniprogram/dev/api/media-picture.html#wxchooseimageobject
      * @param obj
      */
-    chooseImage(obj: params.ChooseImageParamCommonObject): Promise<any>;
+    chooseImage(
+        obj: params.ChooseImageParamCommonObject
+    ): Promise<params.ChooseImageSuccessParamObject>;
 
     /**
      * 预览图片

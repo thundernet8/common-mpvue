@@ -1140,6 +1140,20 @@ export interface ChooseImageParamCommonObject {
     sourceType?: string[];
 }
 
+export interface ChooseImageSuccessParamObject {
+    /**
+     * 图片的本地文件路径列表
+     */
+    tempFilePaths: string[];
+
+    /**
+     * 图片的本地文件列表，每一项是一个 File 对象
+     */
+    tempFiles: File[];
+
+    errMsg: string;
+}
+
 interface ChooseImageParamObject extends BaseParamObject, ChooseImageParamCommonObject {
     /**
      * 成功则返回图片的本地文件路径列表 tempFilePaths
@@ -1147,7 +1161,7 @@ interface ChooseImageParamObject extends BaseParamObject, ChooseImageParamCommon
      * @param tempFilePaths 图片的本地文件路径列表
      * @param tempFiles 图片的本地文件列表，每一项是一个 File 对象
      */
-    success: (tempFilePaths: string[], tempFiles: File[]) => void;
+    success: (res: ChooseImageSuccessParamObject) => void;
 }
 
 export interface PreviewImageParamCommonObject {
