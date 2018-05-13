@@ -1,5 +1,8 @@
 import { httpRequest } from '../request';
 import nav from '../nav';
+import polyfill from '../web/polyfill';
+
+const mp = polyfill();
 
 const noPromiseMethods = [
     'stopRecord',
@@ -35,15 +38,16 @@ Promise.prototype.finally = function(finaliser) {
     );
 };
 
+const _wx = mp.wx || wx;
 const wxp: any = {};
 
-for (const key in wx) {
-    if (Object.prototype.hasOwnProperty.call(wx, key)) {
+for (const key in _wx) {
+    if (Object.prototype.hasOwnProperty.call(_wx, key)) {
         const noPromise =
             noPromiseMethods.includes(key) ||
             key.startsWith('on') ||
             /\w+Sync$/.test(key) ||
-            typeof wx[key] !== 'function';
+            typeof _wx[key] !== 'function';
 
         if (!noPromise) {
             wxp[key] = function(obj, ...args) {
@@ -54,12 +58,12 @@ for (const key in wx) {
                     wx[key](params, ...args);
                 });
             };
-        } else if (typeof wx[key] === 'function') {
+        } else if (typeof _wx[key] === 'function') {
             wxp[key] = function(...args) {
-                return wx[key](...args);
+                return _wx[key](...args);
             };
         } else {
-            wxp[key] = wx[key];
+            wxp[key] = _wx[key];
         }
     }
 }
@@ -81,7 +85,7 @@ Object.defineProperties(wxp, {
     }
 });
 
-Object.defineProperties(wx, {
+Object.defineProperties(_wx, {
     httpRequest: {
         configurable: false,
         enumerable: true,
