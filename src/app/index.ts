@@ -11,6 +11,7 @@ import { AppConfig } from '../../types/config';
 import { StoreOptions } from 'vuex/types/index';
 import Navigator from '../nav';
 import { BaseKV } from '../../types/general';
+import polyfill from '../web/polyfill';
 
 const singleton: any = {};
 
@@ -21,6 +22,8 @@ const singleton: any = {};
  * @param props 给app实例扩展更多的方法或属性
  */
 export default function wrap(App, config: AppConfig, props?: BaseKV) {
+    polyfill();
+
     if (!config.name || !config.version || !config.pkgName) {
         throw new Error('必须提供name,version,pkgName配置项');
     }
