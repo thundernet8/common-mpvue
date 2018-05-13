@@ -178,6 +178,8 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
     if (typeof onLaunched === 'function') {
         onLaunched();
     }
+
+    return app;
 }
 
 /**
