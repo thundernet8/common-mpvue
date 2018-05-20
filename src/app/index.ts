@@ -153,7 +153,7 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
 
     Object.keys(allProps).forEach(key => {
         Object.defineProperty(wxapp, key, {
-            configurable: false,
+            configurable: typeof allProps[key] !== 'function',
             enumerable: true,
             get: function() {
                 if (typeof allProps[key] === 'function') {
