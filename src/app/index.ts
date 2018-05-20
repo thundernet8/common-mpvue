@@ -152,16 +152,19 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
     const allProps = Object.assign({}, methods, props || {});
 
     Object.keys(allProps).forEach(key => {
-        Object.defineProperty(wxapp, key, {
-            configurable: typeof allProps[key] !== 'function',
-            enumerable: true,
-            get: function() {
-                if (typeof allProps[key] === 'function') {
-                    return allProps[key].bind(wxapp);
+        if (typeof allProps[key] === 'function') {
+            Object.defineProperty(wxapp, key, {
+                configurable: false,
+                enumerable: true,
+                get: function() {
+                    return typeof allProps[key] === 'function'
+                        ? allProps[key].bind(wxapp)
+                        : allProps[key];
                 }
-                return allProps[key];
-            }
-        });
+            });
+        } else {
+            wxapp[key] = allProps[key];
+        }
     });
 
     // 添加$app引用至vue实例
