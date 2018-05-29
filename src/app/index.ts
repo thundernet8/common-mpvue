@@ -179,7 +179,7 @@ export default function wrap(App, config: AppConfig, props?: BaseKV) {
     // 添加一个onLaunched生命周期调用，此时getApp已可以使用
     const { onLaunched } = app.$options;
     if (typeof onLaunched === 'function') {
-        onLaunched();
+        onLaunched.call(app);
     }
 
     return app;
